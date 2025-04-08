@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - StrongIron</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="logo">StrongIron</div>
+    <nav>
+      <a href="index.html">A StrongIron</a>
+      <a href="gallery.html">Galeria</a>
+      <a href="contact.html">Contato</a>
+      <a href="signup.html">Cadastre-se</a>
+      <a href="login.html">Área do Aluno</a>
+      <a href="dashboard.html">Treino</a>
+      <a href="profile.html">Perfil</a>
+      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      <button id="login-button">Login</button>
+      <button id="logout-button" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <section class="dashboard-section">
+      <h2>Seu Treino Semanal</h2>
+      <p>Monitore seu progresso e personalize seus treinos!</p>
+
+      <div class="imc-calculator">
+        <h3>Calcule seu IMC</h3>
+        <form id="imc-form">
+          <div class="form-group">
+            <label for="weight">Peso (kg):</label>
+            <input type="number" id="weight" name="weight" placeholder="Ex: 70.5" step="0.1" required>
+          </div>
+          <div class="form-group">
+            <label for="height">Altura (m):</label>
+            <input type="number" id="height" name="height" placeholder="Ex: 1.75" step="0.01" required>
+          </div>
+          <button type="submit">Calcular</button>
+        </form>
+        <div id="imc-result"></div>
+      </div>
+
+      <div class="workouts-table">
+        <h3>Adicionar Novo Treino</h3>
+        <form id="add-workout-form">
+          <div class="form-group">
+            <label for="new-day">Dia da Semana:</label>
+            <select id="new-day" name="new-day" required>
+              <option value="Segunda">Segunda</option>
+              <option value="Terça">Terça</option>
+              <option value="Quarta">Quarta</option>
+              <option value="Quinta">Quinta</option>
+              <option value="Sexta">Sexta</option>
+              <option value="Sábado">Sábado</option>
+              <option value="Domingo">Domingo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-title">Título do Treino:</label>
+            <input type="text" id="new-title" name="new-title" placeholder="Ex: Treino de Peito e Tríceps" required>
+          </div>
+          <div class="form-group">
+            <label>Exercícios:</label>
+            <div id="exercises-list">
+              <div class="exercise-entry">
+                <input type="text" name="exercise" placeholder="Ex: Supino Reto - 4 séries de 10 repetições" required>
+                <button type="button" class="remove-exercise">Remover</button>
+              </div>
+            </div>
+            <button type="button" id="add-exercise">Adicionar Exercício</button>
+          </div>
+          <button type="submit" class="add-workout-button">Adicionar Treino</button>
+        </form>
+
+        <h3>Seus Treinos</h3>
+        <table id="workouts-table">
+          <thead>
+            <tr>
+              <th>Dia</th>
+              <th>Título</th>
+              <th>Exercícios</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="workouts-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="cookie-consent" id="cookie-consent">
+    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
+    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
+    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <div>
+        <h4>Conheça</h4>
+        <a href="#">Sobre</a>
+        <a href="#">Unidades</a>
+        <a href="#">Programas</a>
+      </div>
+      <div>
+        <h4>Seja StrongIron</h4>
+        <a href="#">Blog</a>
+        <a href="#">Eventos</a>
+        <a href="#">Parcerias</a>
+      </div>
+      <div>
+        <h4>Saiba Mais</h4>
+        <a href="#">Contato</a>
+        <a href="#">Trabalhe Conosco</a>
+        <a href="#">Canal de Denúncias</a>
+      </div>
+      <div>
+        <h4>Entre em Contato</h4>
+        <a href="#">Nos siga nas redes sociais</a>
+      </div>
+    </div>
+    <p>© 2025 StrongIron. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

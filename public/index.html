@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrongIron - Academia Premium</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="logo">StrongIron</div>
+    <nav>
+      <a href="index.html">A StrongIron</a>
+      <a href="gallery.html">Galeria</a>
+      <a href="contact.html">Contato</a>
+      <a href="signup.html">Cadastre-se</a>
+      <a href="login.html">Área do Aluno</a>
+      <a href="dashboard.html">Treino</a>
+      <a href="profile.html">Perfil</a>
+      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      <button id="login-button">Login</button>
+      <button id="logout-button" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div class="hero">
+      <div class="price-box">
+        <h2>R$ 9,90</h2>
+        <p>NO 1º MÊS, ESTRUTURA PREMIUM</p>
+      </div>
+      <h1>TÁ NA HORA DE MUDAR</h1>
+      <p>Treine em uma estrutura premium, sempre perto de você</p>
+      <a href="signup.html" class="cta-button">Comece Agora</a>
+    </div>
+
+    <section class="plans-section">
+      <h2>Conheça Nossos Planos</h2>
+      <p>Escolha o plano ideal para o seu estilo de vida!</p>
+      <div class="plans">
+        <div class="plan-card">
+          <h3>Plano Plus</h3>
+          <p class="price">R$ 99,90 <span>/mês</span></p>
+          <ul>
+            <li>Sem taxa de matrícula</li>
+            <li>Acesso a todas as unidades</li>
+            <li>Treinos personalizados</li>
+            <li>Aulas coletivas</li>
+            <li>App StrongIron</li>
+          </ul>
+          <a href="signup.html" class="plan-button">Escolher Plano</a>
+        </div>
+        <div class="plan-card">
+          <h3>Plano Light</h3>
+          <p class="price">R$ 69,90 <span>/mês</span></p>
+          <ul>
+            <li>Sem taxa de matrícula</li>
+            <li>Acesso a 1 unidade</li>
+            <li>Treinos personalizados</li>
+            <li>App StrongIron</li>
+          </ul>
+          <a href="signup.html" class="plan-button">Escolher Plano</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <h2>Por que escolher a StrongIron?</h2>
+      <p>Descubra os diferenciais que fazem da StrongIron a melhor escolha para você!</p>
+      <div class="features">
+        <div class="feature-card">
+          <h4>Fidelidade Zero</h4>
+          <p>Sem multas, cancele quando quiser.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Modalidades Exclusivas</h4>
+          <p>Mais de 30 opções para todos os gostos.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Equipamentos Modernos</h4>
+          <p>Tecnologia de ponta para o seu treino.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials-section">
+      <h2>O que nossos alunos dizem?</h2>
+      <p>Veja como a StrongIron transformou a vida de nossos alunos!</p>
+      <div class="testimonials">
+        <div class="testimonial-card">
+          <p>"A StrongIron mudou minha vida! Os treinos são incríveis e o ambiente é super motivador."</p>
+          <h4>Ana, 28 anos</h4>
+        </div>
+        <div class="testimonial-card">
+          <p>"Adoro a flexibilidade dos planos e a variedade de aulas. Recomendo a todos!"</p>
+          <h4>Pedro, 34 anos</h4>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>Seja um StrongIron!</h2>
+      <p>Experimente a academia do seu jeito. Matricule-se hoje e comece a transformar sua vida!</p>
+      <a href="signup.html" class="cta-button">Matricule-se Agora</a>
+    </section>
+  </main>
+
+  <div class="cookie-consent" id="cookie-consent">
+    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
+    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
+    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <div>
+        <h4>Conheça</h4>
+        <a href="#">Sobre</a>
+        <a href="#">Unidades</a>
+        <a href="#">Programas</a>
+      </div>
+      <div>
+        <h4>Seja StrongIron</h4>
+        <a href="#">Blog</a>
+        <a href="#">Eventos</a>
+        <a href="#">Parcerias</a>
+      </div>
+      <div>
+        <h4>Saiba Mais</h4>
+        <a href="#">Contato</a>
+        <a href="#">Trabalhe Conosco</a>
+        <a href="#">Canal de Denúncias</a>
+      </div>
+      <div>
+        <h4>Entre em Contato</h4>
+        <a href="#">Nos siga nas redes sociais</a>
+      </div>
+    </div>
+    <p>© 2025 StrongIron. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

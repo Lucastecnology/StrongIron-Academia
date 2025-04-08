@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - StrongIron</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="logo">StrongIron</div>
+    <nav>
+      <a href="index.html">A StrongIron</a>
+      <a href="gallery.html">Galeria</a>
+      <a href="contact.html">Contato</a>
+      <a href="signup.html">Cadastre-se</a>
+      <a href="login.html">Área do Aluno</a>
+      <a href="dashboard.html">Treino</a>
+      <a href="profile.html">Perfil</a>
+      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      <button id="login-button">Login</button>
+      <button id="logout-button" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <section class="login-section">
+      <h2>Área do Aluno</h2>
+      <p>Faça login para acessar seus treinos e perfil!</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha:</label>
+          <input type="password" id="password" name="password" placeholder="Sua senha" required>
+        </div>
+        <button type="submit">Entrar</button>
+      </form>
+      <p class="signup-link">Ainda não tem uma conta? <a href="signup.html">Cadastre-se agora!</a></p>
+    </section>
+  </main>
+
+  <div class="cookie-consent" id="cookie-consent">
+    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
+    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
+    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <div>
+        <h4>Conheça</h4>
+        <a href="#">Sobre</a>
+        <a href="#">Unidades</a>
+        <a href="#">Programas</a>
+      </div>
+      <div>
+        <h4>Seja StrongIron</h4>
+        <a href="#">Blog</a>
+        <a href="#">Eventos</a>
+        <a href="#">Parcerias</a>
+      </div>
+      <div>
+        <h4>Saiba Mais</h4>
+        <a href="#">Contato</a>
+        <a href="#">Trabalhe Conosco</a>
+        <a href="#">Canal de Denúncias</a>
+      </div>
+      <div>
+        <h4>Entre em Contato</h4>
+        <a href="#">Nos siga nas redes sociais</a>
+      </div>
+    </div>
+    <p>© 2025 StrongIron. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

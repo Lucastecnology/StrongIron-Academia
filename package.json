@@ -1,0 +1,12 @@
+{
+  "name": "strongiron-project",
+  "version": "1.0.0",
+  "description": "Projeto de academia StrongIron",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
