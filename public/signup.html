@@ -3,24 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastre-se - StrongIron</title>
+  <title>Cadastro - StrongIron</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
-    <div class="logo">StrongIron</div>
     <nav>
-      <a href="index.html">A StrongIron</a>
-      <a href="gallery.html">Galeria</a>
-      <a href="contact.html">Contato</a>
-      <a href="signup.html">Cadastre-se</a>
-      <a href="login.html">Área do Aluno</a>
-      <a href="dashboard.html">Treino</a>
-      <a href="profile.html">Perfil</a>
-      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
-      <button id="login-button">Login</button>
-      <button id="logout-button" style="display: none;">Logout</button>
+      <div class="nav-links-left">
+        <a href="contact.html">Contato</a>
+        <a href="login.html">Área do Aluno</a>
+        <a href="dashboard.html">Treino</a>
+        <a href="profile.html" style="display: none;">Perfil</a>
+        <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      </div>
+      <a href="index.html" class="logo">
+        <img src="imgs/logoSite.png" alt="StrongIron Logo" onerror="console.error('Erro ao carregar a logo. Verifique se o arquivo está em public/imgs/logoSite.png')">
+      </a>
+      <div class="nav-links-right">
+        <a href="signup.html">Cadastre-se</a>
+        <button id="login-button">Login</button>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </div>
     </nav>
   </header>
 
@@ -30,32 +34,26 @@
       <p>Crie sua conta para começar a treinar com a StrongIron!</p>
       <form id="signup-form">
         <div class="form-group">
-          <label for="name">Nome:</label>
+          <label for="name">Nome</label>
           <input type="text" id="name" name="name" placeholder="Seu nome" required>
         </div>
         <div class="form-group">
-          <label for="email">E-mail:</label>
+          <label for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
         </div>
         <div class="form-group">
-          <label for="phone">Telefone:</label>
+          <label for="phone">Telefone</label>
           <input type="tel" id="phone" name="phone" placeholder="Seu telefone" required>
         </div>
         <div class="form-group">
-          <label for="password">Senha:</label>
+          <label for="password">Senha</label>
           <input type="password" id="password" name="password" placeholder="Sua senha" required>
         </div>
         <button type="submit">Cadastrar</button>
       </form>
-      <p class="login-link">Já tem uma conta? <a href="login.html">Faça login aqui!</a></p>
+      <p class="login-link">Já tem uma conta? <a href="login.html">Faça login</a></p>
     </section>
   </main>
-
-  <div class="cookie-consent" id="cookie-consent">
-    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
-    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
-    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
-  </div>
 
   <footer>
     <div class="footer-links">

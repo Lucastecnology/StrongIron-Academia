@@ -30,36 +30,50 @@ body {
 /* Header e Navbar */
 header {
   background-color: #1A1A1A;
-  padding: 15px 20px;
+  padding: 29px 20px;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   height: 80px;
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #E30613;
 }
 
 nav {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
+  position: relative;
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+}
+
+.nav-links-left {
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Espaçamento entre os links à esquerda */
+}
+
+.nav-links-right {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaçamento entre os botões à direita */
 }
 
 nav a {
   color: #FFFFFF;
   text-decoration: none;
-  margin: 0 15px;
   font-size: 16px;
   font-weight: 500;
   transition: color 0.3s;
@@ -122,7 +136,6 @@ section p {
 
 .price-box {
   background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
-  color: #E30613;
   display: inline-block;
   padding: 10px 20px;
   border-radius: 10px;
@@ -133,12 +146,14 @@ section p {
 .price-box h2 {
   font-size: 36px;
   font-weight: 700;
+  color: #E30613;
 }
 
 .price-box p {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 0;
+  color: #1A1A1A;
 }
 
 .hero h1 {
@@ -507,6 +522,38 @@ section p {
 
 .login-link a:hover {
   text-decoration: underline;
+}
+
+/* Profile Section */
+.profile-section {
+  background: linear-gradient(135deg, #444 0%, #333 100%);
+  border-radius: 20px;
+  padding: 60px 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.profile-info {
+  margin-top: 20px;
+}
+
+.profile-info h3 {
+  font-size: 24px;
+  color: #E30613;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.profile-info p {
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.profile-info p strong {
+  color: #E30613;
 }
 
 /* Admin Section */
@@ -958,19 +1005,31 @@ footer p {
 
 /* Responsividade */
 @media (max-width: 768px) {
+  header {
+    height: auto;
+    padding: 10px 20px;
+  }
+
   nav {
     flex-direction: column;
     gap: 10px;
-    height: auto;
-    padding: 10px 0;
   }
 
-  nav a {
-    margin: 5px 0;
+  .logo {
+    position: static;
+    transform: none;
+    margin: 10px 0;
+  }
+
+  .nav-links-left,
+  .nav-links-right {
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
   }
 
   .main-content {
-    padding-top: 120px;
+    padding-top: 140px;
   }
 
   .feature-card {
@@ -1045,5 +1104,15 @@ footer p {
   .add-workout-button {
     padding: 10px 30px;
     font-size: 16px;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  .nav-links-left,
+  .nav-links-right {
+    flex-direction: column;
+    gap: 10px;
   }
 }

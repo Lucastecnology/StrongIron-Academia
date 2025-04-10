@@ -4,21 +4,41 @@ function updateNavbar() {
   const loginButton = document.getElementById('login-button');
   const logoutButton = document.getElementById('logout-button');
   const adminLink = document.getElementById('admin-link');
+  const profileLink = document.querySelector('a[href="profile.html"]'); // Seleciona o link "Perfil"
 
-  if (loggedInUser) {
-    loginButton.style.display = 'none';
-    logoutButton.style.display = 'inline-block';
+  // Verifica se os elementos existem antes de manipulá-los
+  if (loginButton && logoutButton) {
+    if (loggedInUser) {
+      loginButton.style.display = 'none';
+      logoutButton.style.display = 'inline-block';
 
-    // Mostrar o botão "Admin" apenas para admin@admin.com
-    if (loggedInUser === 'admin@admin.com') {
-      adminLink.style.display = 'inline-block';
+      // Mostrar o link "Perfil" se o usuário estiver logado
+      if (profileLink) {
+        profileLink.style.display = 'inline-block';
+      }
+
+      // Mostrar o botão "Admin" apenas para admin@admin.com
+      if (adminLink) {
+        if (loggedInUser === 'admin@admin.com') {
+          adminLink.style.display = 'inline-block';
+        } else {
+          adminLink.style.display = 'none';
+        }
+      }
     } else {
-      adminLink.style.display = 'none';
+      loginButton.style.display = 'inline-block';
+      logoutButton.style.display = 'none';
+
+      // Esconder o link "Perfil" se o usuário não estiver logado
+      if (profileLink) {
+        profileLink.style.display = 'none';
+      }
+
+      // Esconder o link "Admin"
+      if (adminLink) {
+        adminLink.style.display = 'none';
+      }
     }
-  } else {
-    loginButton.style.display = 'inline-block';
-    logoutButton.style.display = 'none';
-    adminLink.style.display = 'none';
   }
 }
 
@@ -29,8 +49,12 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-// Evento de logout
+// Evento principal ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
+  // Atualizar navbar ao carregar a página
+  updateNavbar();
+
+  // Evento de logout
   const logoutButton = document.getElementById('logout-button');
   if (logoutButton) {
     logoutButton.addEventListener('click', logout);
@@ -53,17 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      console.log('Tentando login com:', { email, password });
+      console.log('Tentando login com:', JSON.stringify({ email, password }, null, 2));
 
       try {
         const response = await fetch('/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email, password }),
         });
 
         const result = await response.json();
-        console.log('Resposta do backend:', result);
+        console.log('Resposta do backend:', JSON.stringify(result, null, 2));
 
         if (result.success) {
           console.log('Login bem-sucedido, salvando no localStorage:', email);
@@ -78,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Erro na requisição de login:', error);
         alert('Erro ao tentar fazer login. Verifique o console para mais detalhes.');
+        updateNavbar(); // Garante que a navbar seja atualizada mesmo em caso de erro
       }
     });
   }
@@ -92,17 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = document.getElementById('phone').value;
       const password = document.getElementById('password').value;
 
-      console.log('Tentando signup com:', { name, email, phone, password });
+      console.log('Tentando signup com:', JSON.stringify({ name, email, phone, password }, null, 2));
 
       try {
         const response = await fetch('/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, password })
+          body: JSON.stringify({ name, email, phone, password }),
         });
 
         const result = await response.json();
-        console.log('Resposta do backend (signup):', result);
+        console.log('Resposta do backend (signup):', JSON.stringify(result, null, 2));
 
         if (result.success) {
           alert('Cadastro realizado com sucesso! Faça login para continuar.');
@@ -147,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.classList.contains('remove-exercise')) {
       const exercisesList = document.getElementById('exercises-list');
       const exerciseEntry = e.target.parentElement;
-      if (exercisesList.children.length > 1) {
+      if (exercisesList && exercisesList.children.length > 1) {
         exercisesList.removeChild(exerciseEntry);
       } else {
         alert('Você deve ter pelo menos um exercício.');
@@ -192,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetch(`/workouts/${email}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(workouts)
+          body: JSON.stringify(workouts),
         });
         location.reload();
       } catch (error) {
@@ -214,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`/workouts/${email}`)
       .then(response => response.json())
       .then(workouts => {
-        console.log('Treinos carregados:', workouts);
+        console.log('Treinos carregados:', JSON.stringify(workouts, null, 2));
         workouts.forEach((workout, index) => {
           const row = document.createElement('tr');
           const exercisesList = workout.exercises.map((exercise, exIndex) => `
@@ -255,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/admin-data')
       .then(response => response.json())
       .then(users => {
-        console.log('Dados dos usuários carregados:', users);
+        console.log('Dados dos usuários carregados:', JSON.stringify(users, null, 2));
         users.forEach(user => {
           const row = document.createElement('tr');
           const workoutsList = user.workouts.map(w => `
@@ -275,8 +300,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // Atualizar navbar ao carregar a página
-  updateNavbar();
+  // Calcular IMC
+  const imcForm = document.getElementById('imc-form');
+  if (imcForm) {
+    imcForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const imc = (weight / (height * height)).toFixed(2);
+      document.getElementById('imc-result').innerText = `Seu IMC é: ${imc}`;
+    });
+  }
+
+  // Formulário de contato
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+      contactForm.reset();
+    });
+  }
 });
 
 // Função para editar treino
@@ -373,7 +417,7 @@ function saveWorkout(index) {
       fetch(`/workouts/${email}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workouts)
+        body: JSON.stringify(workouts),
       }).then(() => location.reload());
     })
     .catch(error => {
@@ -396,7 +440,7 @@ function deleteWorkout(index) {
       fetch(`/workouts/${email}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workouts)
+        body: JSON.stringify(workouts),
       }).then(() => location.reload());
     })
     .catch(error => {
@@ -416,7 +460,7 @@ function addExerciseToDay(index) {
         fetch(`/workouts/${email}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(workouts)
+          body: JSON.stringify(workouts),
         }).then(() => location.reload());
       }
     })
@@ -436,7 +480,7 @@ function removeExercise(dayIndex, exIndex) {
         fetch(`/workouts/${email}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(workouts)
+          body: JSON.stringify(workouts),
         }).then(() => location.reload());
       } else {
         alert('Você deve ter pelo menos um exercício. Para remover o dia inteiro, use o botão "Excluir".');
@@ -445,16 +489,4 @@ function removeExercise(dayIndex, exIndex) {
     .catch(error => {
       console.error('Erro ao remover exercício:', error);
     });
-}
-
-// Calcular IMC
-const imcForm = document.getElementById('imc-form');
-if (imcForm) {
-  imcForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const weight = parseFloat(document.getElementById('weight').value);
-    const height = parseFloat(document.getElementById('height').value);
-    const imc = (weight / (height * height)).toFixed(2);
-    document.getElementById('imc-result').innerText = `Seu IMC é: ${imc}`;
-  });
 }

@@ -9,46 +9,44 @@
 </head>
 <body>
   <header>
-    <div class="logo">StrongIron</div>
     <nav>
-      <a href="index.html">A StrongIron</a>
-      <a href="gallery.html">Galeria</a>
-      <a href="contact.html">Contato</a>
-      <a href="signup.html">Cadastre-se</a>
-      <a href="login.html">Área do Aluno</a>
-      <a href="dashboard.html">Treino</a>
-      <a href="profile.html">Perfil</a>
-      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
-      <button id="login-button">Login</button>
-      <button id="logout-button" style="display: none;">Logout</button>
+      <div class="nav-links-left">
+        <a href="contact.html">Contato</a>
+        <a href="login.html">Área do Aluno</a>
+        <a href="dashboard.html">Treino</a>
+        <a href="profile.html" style="display: none;">Perfil</a>
+        <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      </div>
+      <a href="index.html" class="logo">
+        <img src="imgs/logoSite.png" alt="StrongIron Logo" onerror="console.error('Erro ao carregar a logo. Verifique se o arquivo está em public/imgs/logoSite.png')">
+      </a>
+      <div class="nav-links-right">
+        <a href="signup.html">Cadastre-se</a>
+        <button id="login-button">Login</button>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </div>
     </nav>
   </header>
 
   <main class="main-content">
     <section class="admin-section">
       <h2>Painel de Administração</h2>
-      <p>Gerencie os dados dos usuários e seus treinos.</p>
+      <p>Gerencie os usuários do sistema.</p>
       <div class="users-table">
-        <h3>Usuários Cadastrados</h3>
+        <h3>Lista de Usuários</h3>
         <table id="users-table">
           <thead>
             <tr>
+              <th>Nome</th>
               <th>E-mail</th>
-              <th>Senha</th>
-              <th>Treinos</th>
+              <th>Telefone</th>
             </tr>
           </thead>
-          <tbody id="users-table-body"></tbody>
+          <tbody></tbody>
         </table>
       </div>
     </section>
   </main>
-
-  <div class="cookie-consent" id="cookie-consent">
-    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
-    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
-    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
-  </div>
 
   <footer>
     <div class="footer-links">

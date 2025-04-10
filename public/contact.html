@@ -9,50 +9,49 @@
 </head>
 <body>
   <header>
-    <div class="logo">StrongIron</div>
     <nav>
-      <a href="index.html">A StrongIron</a>
-      <a href="gallery.html">Galeria</a>
-      <a href="contact.html">Contato</a>
-      <a href="signup.html">Cadastre-se</a>
-      <a href="login.html">Área do Aluno</a>
-      <a href="dashboard.html">Treino</a>
-      <a href="profile.html">Perfil</a>
-      <button id="login-button">Login</button>
-      <button id="logout-button" style="display: none;">Logout</button>
+      <div class="nav-links-left">
+        <a href="contact.html">Contato</a>
+        <a href="login.html">Área do Aluno</a>
+        <a href="dashboard.html">Treino</a>
+        <a href="profile.html" style="display: none;">Perfil</a>
+        <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      </div>
+      <a href="index.html" class="logo">
+        <img src="imgs/logoSite.png" alt="StrongIron Logo" onerror="console.error('Erro ao carregar a logo. Verifique se o arquivo está em public/imgs/logoSite.png')">
+      </a>
+      <div class="nav-links-right">
+        <a href="signup.html">Cadastre-se</a>
+        <button id="login-button">Login</button>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </div>
     </nav>
   </header>
 
   <main class="main-content">
     <section class="contact-section">
       <h2>Entre em Contato</h2>
-      <p>Envie sua mensagem e nossa equipe entrará em contato em breve!</p>
+      <p>Envie sua mensagem e responderemos o mais rápido possível!</p>
       <div class="contact-container">
-        <img src="https://via.placeholder.com/600x300?text=Contato" alt="Imagem de contato">
+        <img src="imgs/contact-image.jpg" alt="Contato">
         <form id="contact-form">
           <div class="form-group">
-            <label for="name">Nome:</label>
+            <label for="name">Nome</label>
             <input type="text" id="name" name="name" placeholder="Seu nome" required>
           </div>
           <div class="form-group">
-            <label for="email">E-mail:</label>
+            <label for="email">E-mail</label>
             <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
           </div>
           <div class="form-group">
-            <label for="phone">Telefone:</label>
-            <input type="tel" id="phone" name="phone" placeholder="Seu telefone" required>
+            <label for="message">Mensagem</label>
+            <input type="text" id="message" name="message" placeholder="Sua mensagem" required>
           </div>
           <button type="submit">Enviar</button>
         </form>
       </div>
     </section>
   </main>
-
-  <div class="cookie-consent" id="cookie-consent">
-    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
-    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
-    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
-  </div>
 
   <footer>
     <div class="footer-links">

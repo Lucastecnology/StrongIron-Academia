@@ -9,33 +9,37 @@
 </head>
 <body>
   <header>
-    <div class="logo">StrongIron</div>
     <nav>
-      <a href="index.html">A StrongIron</a>
-      <a href="gallery.html">Galeria</a>
-      <a href="contact.html">Contato</a>
-      <a href="signup.html">Cadastre-se</a>
-      <a href="login.html">Área do Aluno</a>
-      <a href="dashboard.html">Treino</a>
-      <a href="profile.html">Perfil</a>
-      <button id="logout-button" style="display: none;">Logout</button>
+      <div class="nav-links-left">
+        <a href="contact.html">Contato</a>
+        <a href="login.html">Área do Aluno</a>
+        <a href="dashboard.html">Treino</a>
+        <a href="profile.html" style="display: none;">Perfil</a>
+        <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      </div>
+      <a href="index.html" class="logo">
+        <img src="imgs/logoSite.png" alt="StrongIron Logo" onerror="console.error('Erro ao carregar a logo. Verifique se o arquivo está em public/imgs/logoSite.png')">
+      </a>
+      <div class="nav-links-right">
+        <a href="signup.html">Cadastre-se</a>
+        <button id="login-button">Login</button>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </div>
     </nav>
   </header>
 
   <main class="main-content">
     <section class="profile-section">
       <h2>Seu Perfil</h2>
-      <div id="profile-data">
-        <!-- Dados do perfil serão preenchidos pelo JavaScript -->
+      <p>Veja e edite suas informações pessoais.</p>
+      <div class="profile-info" id="profile-info">
+        <h3>Informações do Usuário</h3>
+        <p><strong>Nome:</strong> <span id="profile-name"></span></p>
+        <p><strong>E-mail:</strong> <span id="profile-email"></span></p>
+        <p><strong>Telefone:</strong> <span id="profile-phone"></span></p>
       </div>
     </section>
   </main>
-
-  <div class="cookie-consent" id="cookie-consent">
-    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
-    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
-    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
-  </div>
 
   <footer>
     <div class="footer-links">

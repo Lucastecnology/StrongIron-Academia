@@ -9,48 +9,53 @@
 </head>
 <body>
   <header>
-    <div class="logo">StrongIron</div>
     <nav>
-      <a href="index.html">A StrongIron</a>
-      <a href="gallery.html">Galeria</a>
-      <a href="contact.html">Contato</a>
-      <a href="signup.html">Cadastre-se</a>
-      <a href="login.html">Área do Aluno</a>
-      <a href="dashboard.html">Treino</a>
-      <a href="profile.html">Perfil</a>
-      <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
-      <button id="login-button">Login</button>
-      <button id="logout-button" style="display: none;">Logout</button>
+      <div class="nav-links-left">
+        <a href="contact.html">Contato</a>
+        <a href="login.html">Área do Aluno</a>
+        <a href="dashboard.html">Treino</a>
+        <a href="profile.html" style="display: none;">Perfil</a>
+        <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+      </div>
+      <a href="index.html" class="logo">
+        <img src="imgs/logoSite.png" alt="StrongIron Logo" onerror="console.error('Erro ao carregar a logo. Verifique se o arquivo está em public/imgs/logoSite.png')">
+      </a>
+      <div class="nav-links-right">
+        <a href="signup.html">Cadastre-se</a>
+        <button id="login-button">Login</button>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </div>
     </nav>
   </header>
 
   <main class="main-content">
     <section class="dashboard-section">
-      <h2>Seu Treino Semanal</h2>
-      <p>Monitore seu progresso e personalize seus treinos!</p>
+      <h2>Seu Dashboard</h2>
+      <p>Gerencie seus treinos e acompanhe seu progresso!</p>
 
       <div class="imc-calculator">
         <h3>Calcule seu IMC</h3>
         <form id="imc-form">
           <div class="form-group">
-            <label for="weight">Peso (kg):</label>
-            <input type="number" id="weight" name="weight" placeholder="Ex: 70.5" step="0.1" required>
+            <label for="weight">Peso (kg)</label>
+            <input type="number" id="weight" name="weight" placeholder="Seu peso" step="0.1" required>
           </div>
           <div class="form-group">
-            <label for="height">Altura (m):</label>
-            <input type="number" id="height" name="height" placeholder="Ex: 1.75" step="0.01" required>
+            <label for="height">Altura (m)</label>
+            <input type="number" id="height" name="height" placeholder="Sua altura" step="0.01" required>
           </div>
           <button type="submit">Calcular</button>
         </form>
-        <div id="imc-result"></div>
+        <div id="imc-result" class="imc-result"></div>
       </div>
 
       <div class="workouts-table">
-        <h3>Adicionar Novo Treino</h3>
+        <h3>Seus Treinos</h3>
         <form id="add-workout-form">
           <div class="form-group">
-            <label for="new-day">Dia da Semana:</label>
-            <select id="new-day" name="new-day" required>
+            <label for="new-day">Dia da Semana</label>
+            <select id="new-day" name="day" required>
+              <option value="" disabled selected>Selecione o dia</option>
               <option value="Segunda">Segunda</option>
               <option value="Terça">Terça</option>
               <option value="Quarta">Quarta</option>
@@ -61,43 +66,34 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="new-title">Título do Treino:</label>
-            <input type="text" id="new-title" name="new-title" placeholder="Ex: Treino de Peito e Tríceps" required>
+            <label for="new-title">Título do Treino</label>
+            <input type="text" id="new-title" name="title" placeholder="Ex.: Treino de Peito" required>
           </div>
-          <div class="form-group">
-            <label>Exercícios:</label>
-            <div id="exercises-list">
-              <div class="exercise-entry">
-                <input type="text" name="exercise" placeholder="Ex: Supino Reto - 4 séries de 10 repetições" required>
-                <button type="button" class="remove-exercise">Remover</button>
-              </div>
+          <div id="exercises">
+            <div class="exercise-entry">
+              <input type="text" name="exercise" placeholder="Exercício (ex.: Supino)" required>
+              <input type="number" name="sets" placeholder="Séries" required>
+              <input type="number" name="reps" placeholder="Repetições" required>
+              <button type="button" class="remove-exercise">Remover</button>
             </div>
-            <button type="button" id="add-exercise">Adicionar Exercício</button>
           </div>
+          <button type="button" id="add-exercise">Adicionar Exercício</button>
           <button type="submit" class="add-workout-button">Adicionar Treino</button>
         </form>
-
-        <h3>Seus Treinos</h3>
         <table id="workouts-table">
           <thead>
             <tr>
               <th>Dia</th>
               <th>Título</th>
               <th>Exercícios</th>
-              <th>Ação</th>
+              <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="workouts-body"></tbody>
+          <tbody></tbody>
         </table>
       </div>
     </section>
   </main>
-
-  <div class="cookie-consent" id="cookie-consent">
-    <p>Ao clicar em "Aceitar", você concorda em armazenar cookies no seu dispositivo para melhorar a navegação do site, análises de uso e marketing.</p>
-    <button class="accept" onclick="document.getElementById('cookie-consent').style.display='none'">Aceitar</button>
-    <button class="reject" onclick="document.getElementById('cookie-consent').style.display='none'">Rejeitar</button>
-  </div>
 
   <footer>
     <div class="footer-links">
