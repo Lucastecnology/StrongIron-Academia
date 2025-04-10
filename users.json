@@ -4,5 +4,11 @@
     "password": "admin",
     "name": "Admin",
     "phone": "123456789"
+  },
+  {
+    "email": "lucasalvessoares1321@gmail.com",
+    "password": "lucass",
+    "name": "Lucas Alves Soares",
+    "phone": "(81) 98425-2490"
   }
 ]

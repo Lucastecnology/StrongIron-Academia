@@ -69,11 +69,9 @@
             <label for="new-title">Título do Treino</label>
             <input type="text" id="new-title" name="title" placeholder="Ex.: Treino de Peito" required>
           </div>
-          <div id="exercises">
+          <div id="exercises-list">
             <div class="exercise-entry">
-              <input type="text" name="exercise" placeholder="Exercício (ex.: Supino)" required>
-              <input type="number" name="sets" placeholder="Séries" required>
-              <input type="number" name="reps" placeholder="Repetições" required>
+              <input type="text" name="exercise" placeholder="Ex: Supino Reto - 4 séries de 10 repetições" required>
               <button type="button" class="remove-exercise">Remover</button>
             </div>
           </div>
@@ -89,7 +87,7 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="workouts-body"></tbody>
         </table>
       </div>
     </section>

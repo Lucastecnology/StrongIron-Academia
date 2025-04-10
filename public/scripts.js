@@ -5,6 +5,7 @@ function updateNavbar() {
   const logoutButton = document.getElementById('logout-button');
   const adminLink = document.getElementById('admin-link');
   const profileLink = document.querySelector('a[href="profile.html"]'); // Seleciona o link "Perfil"
+  const signupLink = document.querySelector('a[href="signup.html"]'); // Seleciona o link "Cadastre-se"
 
   // Verifica se os elementos existem antes de manipulá-los
   if (loginButton && logoutButton) {
@@ -15,6 +16,11 @@ function updateNavbar() {
       // Mostrar o link "Perfil" se o usuário estiver logado
       if (profileLink) {
         profileLink.style.display = 'inline-block';
+      }
+
+      // Esconder o link "Cadastre-se" se o usuário estiver logado
+      if (signupLink) {
+        signupLink.style.display = 'none';
       }
 
       // Mostrar o botão "Admin" apenas para admin@admin.com
@@ -32,6 +38,11 @@ function updateNavbar() {
       // Esconder o link "Perfil" se o usuário não estiver logado
       if (profileLink) {
         profileLink.style.display = 'none';
+      }
+
+      // Mostrar o link "Cadastre-se" se o usuário não estiver logado
+      if (signupLink) {
+        signupLink.style.display = 'inline-block';
       }
 
       // Esconder o link "Admin"
@@ -145,21 +156,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Adicionar exercício dinamicamente no formulário
   const addExerciseButton = document.getElementById('add-exercise');
-  if (addExerciseButton) {
+  const exercisesListForAdd = document.getElementById('exercises-list');
+  if (addExerciseButton && exercisesListForAdd) {
     addExerciseButton.addEventListener('click', () => {
-      const exercisesList = document.getElementById('exercises-list');
       const newExerciseEntry = document.createElement('div');
       newExerciseEntry.classList.add('exercise-entry');
       newExerciseEntry.innerHTML = `
         <input type="text" name="exercise" placeholder="Ex: Supino Reto - 4 séries de 10 repetições" required>
         <button type="button" class="remove-exercise">Remover</button>
       `;
-      exercisesList.appendChild(newExerciseEntry);
+      exercisesListForAdd.appendChild(newExerciseEntry);
 
       // Adicionar evento de remoção para o novo botão "Remover"
       newExerciseEntry.querySelector('.remove-exercise').addEventListener('click', () => {
-        if (exercisesList.children.length > 1) {
-          exercisesList.removeChild(newExerciseEntry);
+        if (exercisesListForAdd.children.length > 1) {
+          exercisesListForAdd.removeChild(newExerciseEntry);
         } else {
           alert('Você deve ter pelo menos um exercício.');
         }
@@ -168,17 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Evento para remover exercício no formulário
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('remove-exercise')) {
-      const exercisesList = document.getElementById('exercises-list');
-      const exerciseEntry = e.target.parentElement;
-      if (exercisesList && exercisesList.children.length > 1) {
-        exercisesList.removeChild(exerciseEntry);
-      } else {
-        alert('Você deve ter pelo menos um exercício.');
+  const exercisesList = document.getElementById('exercises-list');
+  if (exercisesList) {
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-exercise')) {
+        const exerciseEntry = e.target.parentElement;
+        if (exercisesList.children.length > 1) {
+          exercisesList.removeChild(exerciseEntry);
+        } else {
+          alert('Você deve ter pelo menos um exercício.');
+        }
       }
-    }
-  });
+    });
+  }
 
   // Adicionar novo treino
   const addWorkoutForm = document.getElementById('add-workout-form');

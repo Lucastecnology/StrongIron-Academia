@@ -22,10 +22,23 @@
   },
   {
     "email": "lucasalvessoares1321@gmail.com",
-    "workouts": []
+    "workouts": [
+      {
+        "day": "Quarta",
+        "title": "ASd",
+        "exercises": [
+          "asfsfas",
+          "afsfasf"
+        ]
+      }
+    ]
   },
   {
     "email": "lucas@gmail.com",
+    "workouts": []
+  },
+  {
+    "email": "lucasalvessoares1321@gmail.com",
     "workouts": []
   }
 ]
