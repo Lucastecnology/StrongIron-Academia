@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - StrongIron</title>
+  <title>Painel de Administração - StrongIron</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -37,13 +37,18 @@
         <table id="users-table">
           <thead>
             <tr>
-              <th>Nome</th>
               <th>E-mail</th>
-              <th>Telefone</th>
+              <th>Senha</th>
+              <th>Treinos</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="users-table-body">
+            <!-- Usuários serão adicionados aqui dinamicamente -->
+          </tbody>
         </table>
+        <div id="no-users-message" style="display: none; color: red; margin-top: 10px;">
+          Nenhum usuário encontrado.
+        </div>
       </div>
     </section>
   </main>

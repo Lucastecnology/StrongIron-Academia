@@ -1,31 +1,14 @@
 [
   {
     "email": "admin@admin.com",
-    "workouts": [
-      {
-        "day": "Segunda",
-        "title": "Treino de Peito e Tríceps",
-        "exercises": [
-          "Supino Reto - 4 séries de 10 repetições",
-          "Flexão de Braço - 3 séries de 15 repetições"
-        ]
-      },
-      {
-        "day": "Quarta",
-        "title": "Treino de Costas e Bíceps",
-        "exercises": [
-          "Remada Baixa - 4 séries de 12 repetições",
-          "Rosca Direta - 3 séries de 10 repetições"
-        ]
-      }
-    ]
+    "workouts": []
   },
   {
     "email": "lucasalvessoares1321@gmail.com",
     "workouts": [
       {
         "day": "Quarta",
-        "title": "ASd",
+        "title": "Pernas",
         "exercises": [
           "asfsfas",
           "afsfasf"
@@ -38,7 +21,7 @@
     "workouts": []
   },
   {
-    "email": "lucasalvessoares1321@gmail.com",
+    "email": "test@test.com",
     "workouts": []
   }
 ]

@@ -5,10 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "kill-port": "for /f \"tokens=5\" %a in ('netstat -aon ^| findstr :3000 ^| findstr LISTENING') do taskkill /F /PID %a",
+    "kill-port": "for /f \"tokens=5\" %a in ('netstat -aon ^| findstr :3800 ^| findstr LISTENING') do taskkill /F /PID %a",
     "restart": "npm run kill-port && npm start"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {

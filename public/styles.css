@@ -62,13 +62,13 @@ nav {
 .nav-links-left {
   display: flex;
   align-items: center;
-  gap: 25px; /* Espaçamento entre os links à esquerda */
+  gap: 25px;
 }
 
 .nav-links-right {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espaçamento entre os botões à direita */
+  gap: 15px;
 }
 
 nav a {
@@ -679,8 +679,8 @@ section p {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Dashboard Section */
-.dashboard-section {
+/* Student Area Section */
+.student-area-section {
   background: linear-gradient(135deg, #444 0%, #333 100%);
   border-radius: 20px;
   padding: 60px 20px;
@@ -764,6 +764,338 @@ section p {
   text-align: center;
 }
 
+/* Diets Table */
+.diets-table {
+  background: linear-gradient(135deg, #555 0%, #444 100%);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.diets-table h3 {
+  font-size: 24px;
+  color: #E30613;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.diets-table form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#diet-day,
+#diet-meal {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: #666;
+  color: #FFFFFF;
+  transition: background-color 0.3s;
+}
+
+#diet-day:focus,
+#diet-meal:focus {
+  background-color: #777;
+  outline: none;
+}
+
+.food-entry {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.food-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.food-field label {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.food-field input {
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  background-color: #666;
+  color: #FFFFFF;
+  transition: background-color 0.3s;
+}
+
+.food-field input:focus {
+  background-color: #777;
+  outline: none;
+}
+
+.food-entry button,
+#add-food {
+  background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
+  color: #1A1A1A;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.food-entry button:hover,
+#add-food:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.add-diet-button {
+  background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
+  color: #1A1A1A;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.add-diet-button:hover {
+  background: linear-gradient(135deg, #FFCA28 0%, #FFC107 100%);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.add-diet-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#diets-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #444;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#diets-table th,
+#diets-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #555;
+}
+
+#diets-table th {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+#diets-table td {
+  color: #FFFFFF;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.food-item button {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.food-item button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#diets-table td button {
+  background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
+  color: #1A1A1A;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin: 5px;
+}
+
+#diets-table td button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#diets-table td button:last-child {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+}
+
+#diets-table td button:last-child:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Weight Tracker */
+.weight-tracker {
+  background: linear-gradient(135deg, #555 0%, #444 100%);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin-top: 40px;
+}
+
+.weight-tracker h3 {
+  font-size: 24px;
+  color: #E30613;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.weight-tracker form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin: 0 auto 30px;
+}
+
+.weight-tracker .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.weight-tracker label {
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.weight-tracker input {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: #666;
+  color: #FFFFFF;
+  transition: background-color 0.3s;
+}
+
+.weight-tracker input::placeholder {
+  color: #CCCCCC;
+}
+
+.weight-tracker input:focus {
+  background-color: #777;
+  outline: none;
+}
+
+.add-weight-button {
+  background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
+  color: #1A1A1A;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.add-weight-button:hover {
+  background: linear-gradient(135deg, #FFCA28 0%, #FFC107 100%);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.add-weight-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.weight-chart-container {
+  background: linear-gradient(135deg, #666 0%, #555 100%);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#weight-chart {
+  max-height: 400px;
+}
+
+#weights-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #444;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#weights-table th,
+#weights-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #555;
+}
+
+#weights-table th {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+#weights-table td {
+  color: #FFFFFF;
+}
+
+#weights-table td button {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#weights-table td button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Dashboard Section */
+.dashboard-section {
+  background: linear-gradient(135deg, #444 0%, #333 100%);
+  border-radius: 20px;
+  padding: 60px 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
 .workouts-table {
   background: linear-gradient(135deg, #555 0%, #444 100%);
   border-radius: 15px;
@@ -803,28 +1135,43 @@ section p {
 
 .exercise-entry {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
-.exercise-entry input {
+.exercise-field {
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  padding: 5px;
+}
+
+.exercise-field label {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.exercise-field input {
+  padding: 8px;
   border: none;
   border-radius: 10px;
   font-size: 14px;
   background-color: #666;
   color: #FFFFFF;
-  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.exercise-field input:focus {
+  background-color: #777;
+  outline: none;
 }
 
 .exercise-entry button,
 #add-exercise {
-  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
+  color: #1A1A1A;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px;
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -848,7 +1195,7 @@ section p {
   letter-spacing: 1px;
   cursor: pointer;
   display: block;
-  margin: 20px auto 0;
+  margin: 20px auto 40px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
@@ -889,6 +1236,28 @@ section p {
   color: #FFFFFF;
 }
 
+.exercise-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.exercise-item button {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.exercise-item button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
 #workouts-table td button {
   background: linear-gradient(135deg, #FFC107 0%, #FFCA28 100%);
   color: #1A1A1A;
@@ -905,11 +1274,14 @@ section p {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.exercise-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+#workouts-table td button:last-child {
+  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
+  color: #FFFFFF;
+}
+
+#workouts-table td button:last-child:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Footer */
@@ -918,25 +1290,26 @@ footer {
   padding: 40px 20px;
   text-align: center;
   flex-shrink: 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .footer-links {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  max-width: 1200px;
-  margin: 0 auto 30px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .footer-links div {
-  margin: 20px;
+  text-align: left;
 }
 
 .footer-links h4 {
   font-size: 18px;
   font-weight: 700;
   color: #E30613;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .footer-links a {
@@ -944,7 +1317,7 @@ footer {
   color: #FFFFFF;
   text-decoration: none;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   transition: color 0.3s;
 }
 
@@ -954,165 +1327,105 @@ footer {
 
 footer p {
   font-size: 14px;
-  color: #666;
-}
-
-/* Cookie Consent */
-.cookie-consent {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  background: linear-gradient(135deg, #444 0%, #333 100%);
-  color: #FFFFFF;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.cookie-consent p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.cookie-consent button {
-  background: linear-gradient(135deg, #E30613 0%, #C62828 100%);
-  color: #FFFFFF;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-left: 10px;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.cookie-consent button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.cookie-consent .reject {
-  background: linear-gradient(135deg, #666 0%, #555 100%);
-}
-
-.cookie-consent .reject:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  color: #CCCCCC;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  header {
-    height: auto;
-    padding: 10px 20px;
-  }
-
-  nav {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .logo {
-    position: static;
-    transform: none;
-    margin: 10px 0;
-  }
-
   .nav-links-left,
   .nav-links-right {
-    flex-direction: row;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .main-content {
-    padding-top: 140px;
-  }
-
-  .feature-card {
-    width: calc(50% - 20px);
-  }
-
-  .plan-card,
-  .testimonial-card {
-    width: 100%;
-  }
-
-  .contact-container {
-    flex-direction: column;
-  }
-
-  .contact-container img,
-  .contact-container form {
-    width: 100%;
-  }
-
-  .hero h1 {
-    font-size: 36px;
-  }
-
-  section h2 {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 480px) {
-  .feature-card {
-    width: 100%;
-  }
-
-  .hero h1 {
-    font-size: 28px;
-  }
-
-  section h2 {
-    font-size: 24px;
-  }
-
-  .cta-button,
-  .plan-button {
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-
-  .imc-calculator input,
-  .contact-container input,
-  .login-section input,
-  .signup-section input {
-    font-size: 14px;
-  }
-
-  .imc-calculator button,
-  .contact-container button,
-  .login-section button,
-  .signup-section button {
-    font-size: 14px;
-  }
-
-  .exercise-entry {
-    flex-direction: column;
     gap: 10px;
   }
 
-  .exercise-entry input {
-    margin-right: 0;
-  }
-
-  .add-workout-button {
-    padding: 10px 30px;
-    font-size: 16px;
+  nav a {
+    font-size: 14px;
   }
 
   .logo img {
     height: 40px;
   }
 
-  .nav-links-left,
-  .nav-links-right {
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .features {
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .contact-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contact-container img,
+  .contact-container form {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .weight-tracker form {
+    max-width: 100%;
+  }
+
+  .weight-chart-container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .cta-button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  section h2 {
+    font-size: 28px;
+  }
+
+  section p {
+    font-size: 16px;
+  }
+
+  .plan-card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-links div {
+    text-align: center;
+  }
+
+  .weight-tracker h3 {
+    font-size: 20px;
+  }
+
+  .add-weight-button {
+    padding: 10px 30px;
+    font-size: 16px;
   }
 }

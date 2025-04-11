@@ -1,155 +1,187 @@
 const express = require('express');
+const fs = require('fs').promises;
 const path = require('path');
-const fs = require('fs');
-const app = express();
-const port = 3000;
+const cors = require('cors');
 
-// Middleware para parsing de JSON
+const app = express();
+const port = 3800;
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Função para ler usuários
-const readUsers = () => {
+// Função para ler dados de um arquivo
+async function readData(file) {
   try {
-    const data = fs.readFileSync('users.json');
+    const data = await fs.readFile(file, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    console.error('Erro ao ler users.json:', error);
-    return [];
+    if (error.code === 'ENOENT') {
+      return {};
+    }
+    throw error;
   }
-};
+}
 
-// Função para escrever usuários
-const writeUsers = (users) => {
-  try {
-    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
-  } catch (error) {
-    console.error('Erro ao escrever em users.json:', error);
-  }
-};
+// Função para escrever dados em um arquivo
+async function writeData(file, data) {
+  await fs.writeFile(file, JSON.stringify(data, null, 2));
+}
 
-// Função para ler treinos
-const readWorkouts = () => {
-  try {
-    const data = fs.readFileSync('workouts.json');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Erro ao ler workouts.json:', error);
-    return [];
-  }
-};
+// Arquivo para armazenar usuários
+const usersFile = path.join(__dirname, 'users.json');
 
-// Função para escrever treinos
-const writeWorkouts = (workouts) => {
-  try {
-    fs.writeFileSync('workouts.json', JSON.stringify(workouts, null, 2));
-  } catch (error) {
-    console.error('Erro ao escrever em workouts.json:', error);
-  }
-};
+// Arquivo para armazenar dietas
+const dietsFile = path.join(__dirname, 'diets.json');
+
+// Arquivo para armazenar pesos
+const weightsFile = path.join(__dirname, 'weights.json');
 
 // Rota para login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  console.log('Requisição de login recebida:', { email, password });
-
-  const users = readUsers();
-  console.log('Usuários carregados:', users);
-
-  const user = users.find(u => u.email === email && u.password === password);
-  if (user) {
-    console.log('Usuário encontrado:', user);
-    res.json({ success: true, email: user.email });
-  } else {
-    console.log('Usuário não encontrado ou credenciais inválidas');
-    res.json({ success: false, message: 'Credenciais inválidas' });
+  try {
+    const users = await readData(usersFile);
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false, message: 'Email ou senha incorretos.' });
+    }
+  } catch (error) {
+    console.error('Erro ao processar login:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
   }
 });
 
 // Rota para signup
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
   const { name, email, phone, password } = req.body;
-  console.log('Requisição de signup recebida:', { name, email, phone, password });
-
-  const users = readUsers();
-
-  if (users.find(u => u.email === email)) {
-    console.log('E-mail já cadastrado:', email);
-    res.json({ success: false, message: 'E-mail já cadastrado' });
-    return;
+  try {
+    const users = await readData(usersFile);
+    if (users.find(u => u.email === email)) {
+      return res.status(400).json({ success: false, message: 'Email já cadastrado.' });
+    }
+    users.push({ name, email, phone, password, workouts: [] });
+    await writeData(usersFile, users);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao processar signup:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
   }
-
-  users.push({ email, password, name, phone });
-  writeUsers(users);
-  console.log('Usuário cadastrado:', { email, password, name, phone });
-
-  // Inicializar treinos para o novo usuário
-  const workouts = readWorkouts();
-  workouts.push({ email, workouts: [] });
-  writeWorkouts(workouts);
-  console.log('Treinos inicializados para o novo usuário:', email);
-
-  res.json({ success: true, message: 'Usuário cadastrado com sucesso' });
 });
 
 // Rota para obter treinos de um usuário
-app.get('/workouts/:email', (req, res) => {
-  const email = req.params.email;
-  console.log('Requisição de treinos para:', email);
-
-  const workouts = readWorkouts();
-  const userWorkouts = workouts.find(w => w.email === email) || { email, workouts: [] };
-  console.log('Treinos encontrados:', userWorkouts);
-  res.json(userWorkouts.workouts);
+app.get('/workouts/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const users = await readData(usersFile);
+    const user = users.find(u => u.email === email);
+    if (user) {
+      res.json(user.workouts || []);
+    } else {
+      res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
+    }
+  } catch (error) {
+    console.error('Erro ao obter treinos:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
 });
 
 // Rota para salvar treinos de um usuário
-app.post('/workouts/:email', (req, res) => {
-  const email = req.params.email;
-  const newWorkouts = req.body;
-  console.log('Salvando treinos para:', email, newWorkouts);
-
-  const workouts = readWorkouts();
-  const userWorkoutsIndex = workouts.findIndex(w => w.email === email);
-
-  if (userWorkoutsIndex !== -1) {
-    workouts[userWorkoutsIndex].workouts = newWorkouts;
-  } else {
-    workouts.push({ email, workouts: newWorkouts });
+app.post('/workouts/:email', async (req, res) => {
+  const { email } = req.params;
+  const workouts = req.body;
+  try {
+    const users = await readData(usersFile);
+    const userIndex = users.findIndex(u => u.email === email);
+    if (userIndex !== -1) {
+      users[userIndex].workouts = workouts;
+      await writeData(usersFile, users);
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
+    }
+  } catch (error) {
+    console.error('Erro ao salvar treinos:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
   }
-
-  writeWorkouts(workouts);
-  console.log('Treinos salvos com sucesso');
-  res.json({ success: true });
 });
 
-// Rota para a página de admin
-app.get('/admin-data', (req, res) => {
-  console.log('Requisição de dados para admin');
-  const users = readUsers();
-  const workouts = readWorkouts();
-
-  const adminData = users.map(user => {
-    const userWorkouts = workouts.find(w => w.email === user.email) || { workouts: [] };
-    return {
-      email: user.email,
-      password: user.password,
-      workouts: userWorkouts.workouts
-    };
-  });
-
-  console.log('Dados enviados para admin:', adminData);
-  res.json(adminData);
+// Rota para obter dietas de um usuário
+app.get('/diets/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const dietsData = await readData(dietsFile);
+    const userDiets = dietsData[email] || [];
+    res.json(userDiets);
+  } catch (error) {
+    console.error('Erro ao obter dietas:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
 });
 
-// Servir páginas HTML
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'public', 'contact.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'dashboard.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'public', 'signup.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
+// Rota para salvar dietas de um usuário
+app.post('/diets/:email', async (req, res) => {
+  const { email } = req.params;
+  const diets = req.body;
+  try {
+    const dietsData = await readData(dietsFile);
+    dietsData[email] = diets;
+    await writeData(dietsFile, dietsData);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao salvar dietas:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
+});
 
+// Rota para obter pesos de um usuário
+app.get('/weights/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const weightsData = await readData(weightsFile);
+    const userWeights = weightsData[email] || [];
+    res.json(userWeights);
+  } catch (error) {
+    console.error('Erro ao obter pesos:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
+});
+
+// Rota para salvar pesos de um usuário
+app.post('/weights/:email', async (req, res) => {
+  const { email } = req.params;
+  const weights = req.body;
+  try {
+    const weightsData = await readData(weightsFile);
+    weightsData[email] = weights;
+    await writeData(weightsFile, weightsData);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(`Erro ao salvar pesos: ${error}`);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
+});
+
+// Rota para dados do admin
+app.get('/admin-data', async (req, res) => {
+  try {
+    const users = await readData(usersFile);
+    res.json(users);
+  } catch (error) {
+    console.error('Erro ao obter dados do admin:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
+});
+
+// Rota para servir o frontend
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
