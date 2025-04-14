@@ -9,6 +9,19 @@
     "email": "test@test.com",
     "password": "test",
     "name": "test",
-    "phone": "123456789"
+    "phone": "123456789",
+    "workouts": [
+      {
+        "day": "Terça",
+        "title": "asdas",
+        "exercises": [
+          {
+            "name": "asda",
+            "sets": "2",
+            "reps": "2"
+          }
+        ]
+      }
+    ]
   }
 ]

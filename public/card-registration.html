@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro - StrongIron</title>
+  <title>Cadastro de Cartão - StrongIron</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -29,29 +29,40 @@
   </header>
 
   <main class="main-content">
-    <section class="signup-section">
-      <h2>Cadastre-se</h2>
-      <p>Crie sua conta para começar a treinar com a StrongIron!</p>
-      <form id="signup-form">
+    <section class="card-registration-section">
+      <h1>Finalizar Matrícula</h1>
+      <p>Preencha os dados abaixo para concluir sua matrícula na StrongIron.</p>
+      <form id="card-registration-form">
         <div class="form-group">
-          <label for="name">Nome</label>
-          <input type="text" id="name" name="name" placeholder="Seu nome" required>
+          <label for="enrollment-name">Nome Completo</label>
+          <input type="text" id="enrollment-name" name="name" required>
         </div>
         <div class="form-group">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+          <label for="enrollment-email">Email</label>
+          <input type="email" id="enrollment-email" name="email" required>
         </div>
         <div class="form-group">
-          <label for="phone">Telefone</label>
-          <input type="tel" id="phone" name="phone" placeholder="Seu telefone" required>
+          <label for="enrollment-phone">Telefone</label>
+          <input type="tel" id="enrollment-phone" name="phone" required>
         </div>
         <div class="form-group">
-          <label for="password">Senha</label>
-          <input type="password" id="password" name="password" placeholder="Sua senha" required>
+          <label for="card-number">Número do Cartão</label>
+          <div class="card-input-wrapper">
+            <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            <img id="card-icon" src="" alt="Card Icon" style="display: none;">
+          </div>
         </div>
-        <button type="submit">Cadastrar</button>
+        <div class="form-group">
+          <label for="card-expiry">Data de Validade (MM/AA)</label>
+          <input type="text" id="card-expiry" name="card-expiry" placeholder="MM/AA" maxlength="5" required>
+        </div>
+        <div class="form-group">
+          <label for="card-cvc">CVC</label>
+          <input type="text" id="card-cvc" name="card-cvc" placeholder="123" maxlength="4" required>
+        </div>
+        <input type="hidden" id="selected-plan" name="plan">
+        <button type="submit">Confirmar Matrícula</button>
       </form>
-      <p class="login-link">Já tem uma conta? <a href="login.html">Faça login</a></p>
     </section>
   </main>
 
