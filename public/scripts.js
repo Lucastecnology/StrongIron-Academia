@@ -7,26 +7,31 @@ function updateNavbar() {
   const profileLink = document.querySelector('a[href="profile.html"]');
   const signupLink = document.querySelector('a[href="signup.html"]');
   const studentAreaLink = document.querySelector('a[href="student-area.html"]');
+  const cardRegistrationLink = document.querySelector('a[href="card-registration.html"]');
 
-  if (loginButton && logoutButton) {
-    if (loggedInUser) {
-      loginButton.style.display = "none";
-      logoutButton.style.display = "inline-block";
-      if (profileLink) profileLink.style.display = "inline-block";
-      if (studentAreaLink) studentAreaLink.style.display = "inline-block";
-      if (signupLink) signupLink.style.display = "none";
-      if (adminLink) {
-        adminLink.style.display =
-          loggedInUser === "admin@admin.com" ? "inline-block" : "none";
-      }
-    } else {
-      loginButton.style.display = "inline-block";
-      logoutButton.style.display = "none";
-      if (profileLink) profileLink.style.display = "none";
-      if (studentAreaLink) studentAreaLink.style.display = "none";
-      if (signupLink) signupLink.style.display = "inline-block";
-      if (adminLink) adminLink.style.display = "none";
+  if (!(loginButton && logoutButton)) {
+    console.warn("Elementos da navbar (loginButton ou logoutButton) não encontrados.");
+    return;
+  }
+
+  if (loggedInUser) {
+    loginButton.style.display = "none";
+    logoutButton.style.display = "inline-block";
+    if (profileLink) profileLink.style.display = "inline-block";
+    if (studentAreaLink) studentAreaLink.style.display = "inline-block";
+    if (signupLink) signupLink.style.display = "none";
+    if (adminLink) {
+      adminLink.style.display = loggedInUser === "admin@admin.com" ? "inline-block" : "none";
     }
+    if (cardRegistrationLink) cardRegistrationLink.style.display = "inline-block";
+  } else {
+    loginButton.style.display = "inline-block";
+    logoutButton.style.display = "none";
+    if (profileLink) profileLink.style.display = "none";
+    if (studentAreaLink) studentAreaLink.style.display = "none";
+    if (signupLink) signupLink.style.display = "inline-block";
+    if (adminLink) adminLink.style.display = "none";
+    if (cardRegistrationLink) cardRegistrationLink.style.display = "none";
   }
 }
 
@@ -56,8 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email")?.value;
+      const password = document.getElementById("password")?.value;
+
+      if (!email || !password) {
+        alert("Por favor, preencha e-mail e senha.");
+        return;
+      }
 
       try {
         const response = await fetch("http://localhost:3800/login", {
@@ -72,14 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
           updateNavbar();
           window.location.href = "dashboard.html";
         } else {
-          alert(result.message);
+          alert(result.message || "Falha no login.");
         }
       } catch (error) {
         console.error("Erro na requisição de login:", error);
-        alert(
-          "Erro ao tentar fazer login. Verifique o console para mais detalhes."
-        );
-        updateNavbar();
+        alert("Erro ao tentar fazer login. Verifique o console.");
       }
     });
   }
@@ -88,10 +95,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-      const password = document.getElementById("password").value;
+      const name = document.getElementById("name")?.value;
+      const email = document.getElementById("email")?.value;
+      const phone = document.getElementById("phone")?.value;
+      const password = document.getElementById("password")?.value;
+
+      if (!name || !email || !phone || !password) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
 
       try {
         const response = await fetch("http://localhost:3800/signup", {
@@ -105,13 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Cadastro realizado com sucesso! Faça login para continuar.");
           window.location.href = "login.html";
         } else {
-          alert(result.message);
+          alert(result.message || "Falha no cadastro.");
         }
       } catch (error) {
         console.error("Erro na requisição de signup:", error);
-        alert(
-          "Erro ao tentar cadastrar. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao tentar cadastrar. Verifique o console.");
       }
     });
   }
@@ -136,22 +146,20 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       foodsListForAdd.appendChild(newFoodEntry);
 
-      newFoodEntry
-        .querySelector(".remove-food")
-        .addEventListener("click", () => {
-          if (foodsListForAdd.children.length > 1) {
-            foodsListForAdd.removeChild(newFoodEntry);
-          } else {
-            alert("Você deve ter pelo menos um alimento.");
-          }
-        });
+      newFoodEntry.querySelector(".remove-food").addEventListener("click", () => {
+        if (foodsListForAdd.children.length > 1) {
+          foodsListForAdd.removeChild(newFoodEntry);
+        } else {
+          alert("Você deve ter pelo menos um alimento.");
+        }
+      });
     });
   }
 
   // Evento para remover alimento no formulário
   const foodsList = document.getElementById("foods-list");
   if (foodsList) {
-    document.addEventListener("click", (e) => {
+    foodsList.addEventListener("click", (e) => {
       if (e.target.classList.contains("remove-food")) {
         const foodEntry = e.target.parentElement;
         if (foodsList.children.length > 1) {
@@ -174,75 +182,53 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const day = document.getElementById("diet-day").value;
-      const meal = document.getElementById("diet-meal").value;
-      const foods = Array.from(
-        document.querySelectorAll("#foods-list .food-entry")
-      )
+      const day = document.getElementById("diet-day")?.value;
+      const meal = document.getElementById("diet-meal")?.value;
+      const foods = Array.from(document.querySelectorAll("#foods-list .food-entry"))
         .map((entry) => {
-          const name = entry.querySelector('input[name="food-name"]').value;
-          const quantity = entry.querySelector(
-            'input[name="food-quantity"]'
-          ).value;
+          const name = entry.querySelector('input[name="food-name"]')?.value;
+          const quantity = entry.querySelector('input[name="food-quantity"]')?.value;
           return { name, quantity };
         })
-        .filter(
-          (food) => food.name.trim() !== "" && food.quantity.trim() !== ""
-        );
+        .filter((food) => food.name?.trim() && food.quantity?.trim());
 
-      if (foods.length === 0) {
-        alert("Adicione pelo menos um alimento válido.");
+      if (!day || !meal || foods.length === 0) {
+        alert("Preencha o dia, a refeição e adicione pelo menos um alimento.");
         return;
       }
 
       try {
-        console.log("Enviando requisição para carregar dietas...");
         const response = await fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
 
         if (!response.ok) {
-          console.error("Resposta do servidor não foi OK:", response.status, response.statusText);
           throw new Error("Erro ao carregar dietas: " + response.statusText);
         }
 
-        const diets = await response.json();
-        console.log("Dietas recebidas:", diets);
-
-        const existingDietIndex = diets.findIndex(
-          (d) => d.day === day && d.meal === meal
-        );
+        const diets = await response.json() || [];
+        const existingDietIndex = diets.findIndex((d) => d.day === day && d.meal === meal);
         if (existingDietIndex !== -1) {
-          alert(
-            "Já existe uma dieta para este dia e refeição. Edite ou exclua a dieta existente."
-          );
+          alert("Já existe uma dieta para este dia e refeição. Edite ou exclua a dieta existente.");
           return;
         }
 
         diets.push({ day, meal, foods });
-        console.log("Enviando requisição para salvar dietas:", diets);
-        const saveResponse = await fetch(
-          `http://localhost:3800/diets/${encodeURIComponent(email)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(diets),
-          }
-        );
+        const saveResponse = await fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(diets),
+        });
 
         if (!saveResponse.ok) {
-          console.error("Erro ao salvar dieta:", saveResponse.status, saveResponse.statusText);
           throw new Error("Erro ao salvar dieta: " + saveResponse.statusText);
         }
 
-        console.log("Dieta salva com sucesso, recarregando página...");
         location.reload();
       } catch (error) {
         console.error("Erro ao adicionar dieta:", error);
-        alert(
-          "Erro ao adicionar dieta. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao adicionar dieta. Verifique o console.");
       }
     });
   }
@@ -256,62 +242,48 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    console.log("Carregando dietas para o email:", email);
     fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => {
         if (!response.ok) {
-          console.error("Resposta do servidor não foi OK:", response.status, response.statusText);
           throw new Error("Erro ao carregar dietas: " + response.statusText);
         }
-        return response.text(); // Obtém a resposta como texto para depuração
+        return response.json();
       })
-      .then((text) => {
-        console.log("Resposta bruta do servidor:", text);
-        try {
-          const diets = JSON.parse(text); // Tenta parsear como JSON
-          console.log("Dietas carregadas:", JSON.stringify(diets, null, 2));
-          if (!Array.isArray(diets)) {
-            throw new Error("A resposta não é um array de dietas.");
-          }
-          diets.forEach((diet, index) => {
-            const row = document.createElement("tr");
-            const foodsList = diet.foods
-              .map(
-                (food, foodIndex) => `
+      .then((diets) => {
+        if (!Array.isArray(diets)) {
+          throw new Error("A resposta não é um array de dietas.");
+        }
+        diets.forEach((diet, index) => {
+          const row = document.createElement("tr");
+          const foodsList = diet.foods
+            .map((food, foodIndex) => `
               <div class="food-item">
                 ${food.name} (${food.quantity})
                 <button onclick="removeFood(${index}, ${foodIndex})">Remover</button>
               </div>
-            `
-              )
-              .join("");
-            row.innerHTML = `
-              <td>${diet.day}</td>
-              <td>${diet.meal}</td>
-              <td>
-                ${foodsList}
-                <button onclick="addFoodToDiet(${index})">Adicionar Alimento</button>
-              </td>
-              <td>
-                <button onclick="editDiet(${index})">Editar</button>
-                <button onclick="deleteDiet(${index})">Excluir</button>
-              </td>
-            `;
-            dietsBody.appendChild(row);
-          });
-        } catch (parseError) {
-          console.error("Erro ao parsear JSON:", parseError);
-          throw new Error("A resposta do servidor não é um JSON válido.");
-        }
+            `)
+            .join("");
+          row.innerHTML = `
+            <td>${diet.day}</td>
+            <td>${diet.meal}</td>
+            <td>
+              ${foodsList}
+              <button onclick="addFoodToDiet(${index})">Adicionar Alimento</button>
+            </td>
+            <td>
+              <button onclick="editDiet(${index})">Editar</button>
+              <button onclick="deleteDiet(${index})">Excluir</button>
+            </td>
+          `;
+          dietsBody.appendChild(row);
+        });
       })
       .catch((error) => {
         console.error("Erro ao carregar dietas:", error);
-        alert(
-          "Erro ao carregar dietas. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao carregar dietas. Verifique o console.");
       });
   }
 
@@ -326,8 +298,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const date = document.getElementById("weight-date").value;
-      const weight = parseFloat(document.getElementById("weight-value").value);
+      const date = document.getElementById("weight-date")?.value;
+      const weight = parseFloat(document.getElementById("weight-value")?.value);
 
       if (!date || isNaN(weight)) {
         alert("Por favor, preencha a data e o peso corretamente.");
@@ -344,20 +316,16 @@ document.addEventListener("DOMContentLoaded", () => {
           throw new Error("Erro ao carregar pesos: " + response.statusText);
         }
 
-        const weights = await response.json();
+        const weights = await response.json() || [];
 
         weights.push({ date, weight });
-        // Ordenar por data
         weights.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const saveResponse = await fetch(
-          `http://localhost:3800/weights/${encodeURIComponent(email)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(weights),
-          }
-        );
+        const saveResponse = await fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(weights),
+        });
 
         if (!saveResponse.ok) {
           throw new Error("Erro ao salvar pesos: " + saveResponse.statusText);
@@ -366,9 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         location.reload();
       } catch (error) {
         console.error("Erro ao adicionar peso:", error);
-        alert(
-          "Erro ao adicionar peso. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao adicionar peso. Verifique o console.");
       }
     });
   }
@@ -394,9 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then((weights) => {
-        console.log("Pesos carregados:", JSON.stringify(weights, null, 2));
-
-        // Renderizar tabela
+        weights = Array.isArray(weights) ? weights : [];
         weights.forEach((entry, index) => {
           const row = document.createElement("tr");
           row.innerHTML = `
@@ -409,10 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
           weightsBody.appendChild(row);
         });
 
-        // Renderizar gráfico
-        const labels = weights.map((entry) =>
-          new Date(entry.date).toLocaleDateString("pt-BR")
-        );
+        const labels = weights.map((entry) => new Date(entry.date).toLocaleDateString("pt-BR"));
         const data = weights.map((entry) => entry.weight);
 
         new Chart(weightChartCanvas, {
@@ -440,9 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
               legend: {
                 labels: {
                   color: "#FFFFFF",
-                  font: {
-                    family: "Montserrat",
-                  },
+                  font: { family: "Montserrat" },
                 },
               },
               tooltip: {
@@ -455,29 +414,16 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             scales: {
               x: {
-                ticks: {
-                  color: "#FFFFFF",
-                  font: {
-                    family: "Montserrat",
-                  },
-                },
-                grid: {
-                  color: "rgba(255, 255, 255, 0.1)",
-                },
+                ticks: { color: "#FFFFFF", font: { family: "Montserrat" } },
+                grid: { color: "rgba(255, 255, 255, 0.1)" },
               },
               y: {
                 ticks: {
                   color: "#FFFFFF",
-                  font: {
-                    family: "Montserrat",
-                  },
-                  callback: function (value) {
-                    return value + " kg";
-                  },
+                  font: { family: "Montserrat" },
+                  callback: function (value) { return value + " kg"; },
                 },
-                grid: {
-                  color: "rgba(255, 255, 255, 0.1)",
-                },
+                grid: { color: "rgba(255, 255, 255, 0.1)" },
                 beginAtZero: false,
               },
             },
@@ -486,9 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("Erro ao carregar pesos:", error);
-        alert(
-          "Erro ao carregar pesos. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao carregar pesos. Verifique o console.");
       });
   }
 
@@ -516,21 +460,19 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       exercisesListForAdd.appendChild(newExerciseEntry);
 
-      newExerciseEntry
-        .querySelector(".remove-exercise")
-        .addEventListener("click", () => {
-          if (exercisesListForAdd.children.length > 1) {
-            exercisesListForAdd.removeChild(newExerciseEntry);
-          } else {
-            alert("Você deve ter pelo menos um exercício.");
-          }
-        });
+      newExerciseEntry.querySelector(".remove-exercise").addEventListener("click", () => {
+        if (exercisesListForAdd.children.length > 1) {
+          exercisesListForAdd.removeChild(newExerciseEntry);
+        } else {
+          alert("Você deve ter pelo menos um exercício.");
+        }
+      });
     });
   }
 
   const exercisesList = document.getElementById("exercises-list");
   if (exercisesList) {
-    document.addEventListener("click", (e) => {
+    exercisesList.addEventListener("click", (e) => {
       if (e.target.classList.contains("remove-exercise")) {
         const exerciseEntry = e.target.parentElement;
         if (exercisesList.children.length > 1) {
@@ -552,51 +494,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const day = document.getElementById("new-day").value;
-      const title = document.getElementById("new-title").value;
-      const exercises = Array.from(
-        document.querySelectorAll("#exercises-list .exercise-entry")
-      )
+      const day = document.getElementById("new-day")?.value;
+      const title = document.getElementById("new-title")?.value;
+      const exercises = Array.from(document.querySelectorAll("#exercises-list .exercise-entry"))
         .map((entry) => {
-          const name = entry.querySelector('input[name="exercise-name"]').value;
-          const sets = entry.querySelector('input[name="exercise-sets"]').value;
-          const reps = entry.querySelector('input[name="exercise-reps"]').value;
+          const name = entry.querySelector('input[name="exercise-name"]')?.value;
+          const sets = entry.querySelector('input[name="exercise-sets"]')?.value;
+          const reps = entry.querySelector('input[name="exercise-reps"]')?.value;
           return { name, sets, reps };
         })
-        .filter(
-          (exercise) =>
-            exercise.name.trim() !== "" && exercise.sets && exercise.reps
-        );
+        .filter((exercise) => exercise.name?.trim() && exercise.sets && exercise.reps);
 
-      if (exercises.length === 0) {
-        alert("Adicione pelo menos um exercício válido.");
+      if (!day || !title || exercises.length === 0) {
+        alert("Preencha o dia, título e adicione pelo menos um exercício.");
         return;
       }
 
       try {
         const response = await fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`);
-        const workouts = await response.json();
+        if (!response.ok) throw new Error("Erro ao carregar treinos");
+        const workouts = await response.json() || [];
 
         const existingDayIndex = workouts.findIndex((w) => w.day === day);
         if (existingDayIndex !== -1) {
-          alert(
-            "Já existe um treino para este dia. Edite ou exclua o treino existente."
-          );
+          alert("Já existe um treino para este dia. Edite ou exclua o treino existente.");
           return;
         }
 
         workouts.push({ day, title, exercises });
-        await fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        const saveResponse = await fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
         });
+        if (!saveResponse.ok) throw new Error("Erro ao salvar treino");
         location.reload();
       } catch (error) {
         console.error("Erro ao adicionar treino:", error);
-        alert(
-          "Erro ao adicionar treino. Verifique o console para mais detalhes."
-        );
+        alert("Erro ao adicionar treino. Verifique o console.");
       }
     });
   }
@@ -610,19 +545,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error("Erro ao carregar treinos");
+        return response.json();
+      })
       .then((workouts) => {
+        workouts = Array.isArray(workouts) ? workouts : [];
         workouts.forEach((workout, index) => {
           const row = document.createElement("tr");
           const exercisesList = workout.exercises
-            .map(
-              (exercise, exIndex) => `
+            .map((exercise, exIndex) => `
               <div class="exercise-item">
                 ${exercise.name}: ${exercise.sets} séries de ${exercise.reps} repetições
                 <button onclick="removeExercise(${index}, ${exIndex})">Remover</button>
               </div>
-            `
-            )
+            `)
             .join("");
           row.innerHTML = `
             <td>${workout.day}</td>
@@ -641,9 +578,11 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("Erro ao carregar treinos:", error);
+        alert("Erro ao carregar treinos. Verifique o console.");
       });
   }
 
+  // Carregar dados dos usuários na página admin.html
   const usersTableBody = document.getElementById("users-table-body");
   if (usersTableBody) {
     const email = localStorage.getItem("loggedInUser");
@@ -654,36 +593,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetch("http://localhost:3800/admin-data")
       .then((response) => {
-        if (!response.ok)
-          throw new Error(
-            `Erro na requisição: ${response.status} ${response.statusText}`
-          );
-        return response.json();
+        if (!response.ok) throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
+        return response.text();
       })
-      .then((users) => {
+      .then((text) => {
+        console.log("Resposta bruta do servidor (admin-data):", text);
+        let users;
+        try {
+          users = JSON.parse(text);
+          if (!Array.isArray(users)) throw new Error("A resposta não é um array de usuários.");
+        } catch (parseError) {
+          console.error("Erro ao parsear JSON (admin-data):", parseError);
+          throw new Error("A resposta do servidor não é um JSON válido.");
+        }
+
         const noUsersMessage = document.getElementById("no-users-message");
-        if (users.length === 0) {
+        if (!users || users.length === 0) {
           noUsersMessage.style.display = "block";
         } else {
           noUsersMessage.style.display = "none";
           users.forEach((user) => {
             const row = document.createElement("tr");
             const workoutsList = user.workouts
-              .map(
-                (w) => `
+              .map((w) => `
                 ${w.day} (${w.title}):<br>
                 ${w.exercises
-                  .map(
-                    (ex) =>
-                      `- ${ex.name}: ${ex.sets} séries de ${ex.reps} repetições`
-                  )
+                  .map((ex) => `- ${ex.name}: ${ex.sets} séries de ${ex.reps} repetições`)
                   .join("<br>")}
-              `
-              )
+              `)
               .join("<br><br>");
             row.innerHTML = `
-              <td>${user.email}</td>
-              <td>${user.password}</td>
+              <td>${user.email || "N/A"}</td>
+              <td>${user.password || "N/A"}</td>
               <td>${workoutsList || "Nenhum treino"}</td>
             `;
             usersTableBody.appendChild(row);
@@ -693,9 +634,73 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => {
         console.error("Erro ao carregar dados dos usuários:", error);
         const noUsersMessage = document.getElementById("no-users-message");
-        noUsersMessage.innerText =
-          "Erro ao carregar os dados dos usuários. Verifique o console para mais detalhes.";
+        noUsersMessage.innerText = "Erro ao carregar os dados dos usuários. Verifique o console.";
         noUsersMessage.style.display = "block";
+      });
+  }
+
+  // Carregar matrículas na página admin.html
+  const enrollmentsBody = document.getElementById("enrollments-body");
+  if (enrollmentsBody) {
+    const email = localStorage.getItem("loggedInUser");
+    if (!email || email !== "admin@admin.com") {
+      window.location.href = "login.html";
+      return;
+    }
+
+    fetch("http://localhost:3800/enrollments")
+      .then((response) => {
+        if (!response.ok) {
+          console.error("Erro HTTP na requisição de matrículas:", response.status, response.statusText);
+          return response.text().then((text) => Promise.reject(new Error(`Status: ${response.status}, Corpo: ${text}`)));
+        }
+        return response.text();
+      })
+      .then((text) => {
+        console.log("Resposta bruta do servidor (enrollments):", text);
+        let enrollments;
+        try {
+          enrollments = JSON.parse(text);
+          if (!Array.isArray(enrollments)) {
+            throw new Error("A resposta não é um array de matrículas.");
+          }
+        } catch (parseError) {
+          console.error("Erro ao parsear JSON (enrollments):", parseError, "Texto recebido:", text);
+          enrollments = [];
+        }
+
+        const noEnrollmentsMessage = document.getElementById("no-enrollments-message");
+        if (enrollments.length === 0) {
+          noEnrollmentsMessage.style.display = "block";
+          noEnrollmentsMessage.innerText = "Nenhuma matrícula encontrada.";
+        } else {
+          noEnrollmentsMessage.style.display = "none";
+          enrollments.forEach((enrollment, index) => {
+            try {
+              console.log(`Processando matrícula ${index}:`, enrollment);
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${enrollment.name || "N/A"}</td>
+                <td>${enrollment.email || "N/A"}</td>
+                <td>${enrollment.phone || "N/A"}</td>
+                <td>${censorCardNumber(enrollment.cardNumber) || "N/A"}</td>
+                <td>${censorExpiry(enrollment.cardExpiry) || "N/A"}</td>
+                <td>${censorCvc(enrollment.cardCvc) || "N/A"}</td>
+                <td>${enrollment.plan || "N/A"}</td>
+                <td>${enrollment.registrationDate ? new Date(enrollment.registrationDate).toLocaleString("pt-BR") : "N/A"}</td>
+              `;
+              enrollmentsBody.appendChild(row);
+            } catch (error) {
+              console.error(`Erro ao processar matrícula ${index}:`, error, "Dados:", enrollment);
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar matrículas:", error);
+        const noEnrollmentsMessage = document.getElementById("no-enrollments-message");
+        noEnrollmentsMessage.innerText = `Erro ao carregar as matrículas. Verifique o console. Detalhes: ${error.message}`;
+        noEnrollmentsMessage.style.display = "block";
       });
   }
 
@@ -703,107 +708,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (imcForm) {
     imcForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const weight = parseFloat(document.getElementById("weight").value);
-      const height = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight")?.value);
+      const height = parseFloat(document.getElementById("height")?.value);
+      if (isNaN(weight) || isNaN(height) || height === 0) {
+        alert("Por favor, insira valores válidos para peso e altura.");
+        return;
+      }
       const imc = (weight / (height * height)).toFixed(2);
       document.getElementById("imc-result").innerText = `Seu IMC é: ${imc}`;
     });
-    // Dentro do document.addEventListener("DOMContentLoaded", ...)
-const startNowButton = document.getElementById("start-now-button");
-const enrollmentModal = document.getElementById("enrollment-modal");
-const closeButton = document.querySelector(".close-button");
-
-if (startNowButton && enrollmentModal) {
-  startNowButton.addEventListener("click", () => {
-    enrollmentModal.style.display = "block";
-  });
-
-  closeButton.addEventListener("click", () => {
-    enrollmentModal.style.display = "none";
-  });
-
-  window.addEventListener("click", (event) => {
-    if (event.target === enrollmentModal) {
-      enrollmentModal.style.display = "none";
-    }
-  });
-}
-
-// Identificação da bandeira do cartão
-const cardNumberInput = document.getElementById("card-number");
-const cardIcon = document.getElementById("card-icon");
-
-if (cardNumberInput && cardIcon) {
-  cardNumberInput.addEventListener("input", (e) => {
-    let value = e.target.value.replace(/\D/g, ""); // Remove tudo que não é número
-    let formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Adiciona espaço a cada 4 dígitos
-    e.target.value = formattedValue;
-
-    // Identificar a bandeira do cartão
-    const cardType = identifyCardType(value);
-    if (cardType) {
-      cardIcon.src = `images/${cardType}.png`; // Certifique-se de ter os ícones das bandeiras na pasta images/
-      cardIcon.style.display = "inline-block";
-    } else {
-      cardIcon.style.display = "none";
-    }
-  });
-}
-
-// Função para identificar a bandeira do cartão
-function identifyCardType(number) {
-  if (!number) return null;
-
-  // Padrões de bandeiras (baseados nos primeiros dígitos)
-  const cardPatterns = {
-    visa: /^4/,
-    mastercard: /^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/,
-    amex: /^3[47]/,
-    discover: /^6(?:011|5)/,
-    diners: /^3(?:0[0-5]|[68])/,
-    jcb: /^(?:2131|1800|35)/
-  };
-
-  for (const [cardType, pattern] of Object.entries(cardPatterns)) {
-    if (pattern.test(number)) {
-      return cardType;
-    }
-  }
-  return null;
-}
-
-// Enviar matrícula
-const enrollmentForm = document.getElementById("enrollment-form");
-if (enrollmentForm) {
-  enrollmentForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = document.getElementById("enrollment-name").value;
-    const email = document.getElementById("enrollment-email").value;
-    const cardNumber = document.getElementById("card-number").value;
-    const cardExpiry = document.getElementById("card-expiry").value;
-    const cardCvc = document.getElementById("card-cvc").value;
-
-    try {
-      const response = await fetch("http://localhost:3800/enrollments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, cardNumber, cardExpiry, cardCvc }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert("Matrícula realizada com sucesso! Faça login para continuar.");
-        enrollmentModal.style.display = "none";
-        window.location.href = "login.html";
-      } else {
-        alert(result.message);
-      }
-    } catch (error) {
-      console.error("Erro ao realizar matrícula:", error);
-      alert("Erro ao realizar matrícula. Verifique o console para mais detalhes.");
-    }
-  });
-}
   }
 
   const contactForm = document.getElementById("contact-form");
@@ -814,77 +727,163 @@ if (enrollmentForm) {
       contactForm.reset();
     });
   }
+
+  // Lógica para cadastro de cartão
+  const cardRegistrationForm = document.getElementById("card-registration-form");
+  if (cardRegistrationForm) {
+    cardRegistrationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const enrollmentData = {
+        name: document.getElementById("enrollment-name")?.value?.trim(),
+        email: document.getElementById("enrollment-email")?.value?.trim(),
+        phone: document.getElementById("enrollment-phone")?.value?.trim(),
+        cardNumber: document.getElementById("card-number")?.value?.replace(/\D/g, ""),
+        cardExpiry: document.getElementById("card-expiry")?.value?.trim(),
+        cardCvc: document.getElementById("card-cvc")?.value?.trim(),
+        plan: document.getElementById("selected-plan")?.value?.trim() || "Plano Básico",
+        registrationDate: new Date().toISOString(),
+      };
+
+      if (!enrollmentData.name || !enrollmentData.email || !enrollmentData.phone ||
+          !enrollmentData.cardNumber || !enrollmentData.cardExpiry || !enrollmentData.cardCvc ||
+          !enrollmentData.plan) {
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+      }
+
+      try {
+        console.log("Enviando dados para o servidor:", enrollmentData);
+        const response = await fetch("http://localhost:3800/enrollments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(enrollmentData),
+        });
+
+        const result = await response.json();
+        console.log("Resposta do servidor:", result);
+
+        if (result.success) {
+          alert("Matrícula realizada com sucesso! Redirecionando para o login.");
+          window.location.href = "login.html";
+        } else {
+          alert(result.message || "Erro ao realizar matrícula.");
+        }
+      } catch (error) {
+        console.error("Erro ao realizar matrícula:", error);
+        alert("Erro ao realizar matrícula. Verifique o console.");
+      }
+    });
+
+    const cardNumberInput = document.getElementById("card-number");
+    const cardIcon = document.getElementById("card-icon");
+    if (cardNumberInput && cardIcon) {
+      cardNumberInput.addEventListener("input", (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        let formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
+        e.target.value = formattedValue;
+
+        const cardType = identifyCardType(value);
+        if (cardType) {
+          cardIcon.src = `images/${cardType}.png`;
+          cardIcon.style.display = "inline-block";
+        } else {
+          cardIcon.style.display = "none";
+        }
+      });
+    }
+  }
 });
+
+// Função para identificar a bandeira do cartão
+function identifyCardType(number) {
+  if (!number) return null;
+
+  const cardPatterns = {
+    visa: /^4/,
+    mastercard: /^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/,
+    amex: /^3[47]/,
+    discover: /^6(?:011|5)/,
+    diners: /^3(?:0[0-5]|[68])/,
+    jcb: /^(?:2131|1800|35)/,
+  };
+
+  for (const [cardType, pattern] of Object.entries(cardPatterns)) {
+    if (pattern.test(number)) return cardType;
+  }
+  return null;
+}
+
+// Funções para censurar informações sensíveis do cartão
+function censorCardNumber(cardNumber) {
+  if (!cardNumber) return "N/A";
+  const lastFour = cardNumber.slice(-4).padStart(cardNumber.length, "*");
+  return lastFour.replace(/(\d{4})/g, "$1 ").trim();
+}
+
+function censorExpiry(expiry) {
+  if (!expiry || typeof expiry !== "string") return "N/A";
+  // Verifica se o formato é MMAA (ex.: "5902")
+  if (expiry.length === 4 && /^\d{4}$/.test(expiry)) {
+    const month = expiry.slice(0, 2);
+    const year = expiry.slice(2, 4);
+    return `${month}/*${year.slice(-1)}`; // Censura o penúltimo dígito do ano
+  }
+  // Caso o formato seja MM/YYYY (ex.: "05/2002")
+  const parts = expiry.split("/");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return "N/A";
+  const [month, year] = parts;
+  return `${month}/X${year.slice(-1)}`;
+}
+
+function censorCvc(cvc) {
+  if (!cvc) return "N/A";
+  return "*".repeat(cvc.length - 1) + cvc.slice(-1);
+}
 
 // Funções para dietas
 function editDiet(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      return response.json();
+    })
     .then((diets) => {
       const diet = diets[index];
-      const row = document.getElementById("diets-body").children[index];
+      const row = document.getElementById("diets-body")?.children[index];
+      if (!row) return;
       row.innerHTML = `
         <td>
           <select id="edit-diet-day-${index}">
-            <option value="Segunda" ${
-              diet.day === "Segunda" ? "selected" : ""
-            }>Segunda</option>
-            <option value="Terça" ${
-              diet.day === "Terça" ? "selected" : ""
-            }>Terça</option>
-            <option value="Quarta" ${
-              diet.day === "Quarta" ? "selected" : ""
-            }>Quarta</option>
-            <option value="Quinta" ${
-              diet.day === "Quinta" ? "selected" : ""
-            }>Quinta</option>
-            <option value="Sexta" ${
-              diet.day === "Sexta" ? "selected" : ""
-            }>Sexta</option>
-            <option value="Sábado" ${
-              diet.day === "Sábado" ? "selected" : ""
-            }>Sábado</option>
-            <option value="Domingo" ${
-              diet.day === "Domingo" ? "selected" : ""
-            }>Domingo</option>
+            <option value="Segunda" ${diet.day === "Segunda" ? "selected" : ""}>Segunda</option>
+            <option value="Terça" ${diet.day === "Terça" ? "selected" : ""}>Terça</option>
+            <option value="Quarta" ${diet.day === "Quarta" ? "selected" : ""}>Quarta</option>
+            <option value="Quinta" ${diet.day === "Quinta" ? "selected" : ""}>Quinta</option>
+            <option value="Sexta" ${diet.day === "Sexta" ? "selected" : ""}>Sexta</option>
+            <option value="Sábado" ${diet.day === "Sábado" ? "selected" : ""}>Sábado</option>
+            <option value="Domingo" ${diet.day === "Domingo" ? "selected" : ""}>Domingo</option>
           </select>
         </td>
         <td>
           <select id="edit-diet-meal-${index}">
-            <option value="Café da Manhã" ${
-              diet.meal === "Café da Manhã" ? "selected" : ""
-            }>Café da Manhã</option>
-            <option value="Lanche da Manhã" ${
-              diet.meal === "Lanche da Manhã" ? "selected" : ""
-            }>Lanche da Manhã</option>
-            <option value="Almoço" ${
-              diet.meal === "Almoço" ? "selected" : ""
-            }>Almoço</option>
-            <option value="Lanche da Tarde" ${
-              diet.meal === "Lanche da Tarde" ? "selected" : ""
-            }>Lanche da Tarde</option>
-            <option value="Jantar" ${
-              diet.meal === "Jantar" ? "selected" : ""
-            }>Jantar</option>
-            <option value="Ceia" ${
-              diet.meal === "Ceia" ? "selected" : ""
-            }>Ceia</option>
+            <option value="Café da Manhã" ${diet.meal === "Café da Manhã" ? "selected" : ""}>Café da Manhã</option>
+            <option value="Lanche da Manhã" ${diet.meal === "Lanche da Manhã" ? "selected" : ""}>Lanche da Manhã</option>
+            <option value="Almoço" ${diet.meal === "Almoço" ? "selected" : ""}>Almoço</option>
+            <option value="Lanche da Tarde" ${diet.meal === "Lanche da Tarde" ? "selected" : ""}>Lanche da Tarde</option>
+            <option value="Jantar" ${diet.meal === "Jantar" ? "selected" : ""}>Jantar</option>
+            <option value="Ceia" ${diet.meal === "Ceia" ? "selected" : ""}>Ceia</option>
           </select>
         </td>
         <td>
           <div id="edit-foods-${index}">
-            ${diet.foods
-              .map(
-                (food, foodIndex) => `
+            ${diet.foods.map((food, foodIndex) => `
               <div class="food-item">
                 <input type="text" name="edit-food-name-${index}-${foodIndex}" value="${food.name}">
                 <input type="text" name="edit-food-quantity-${index}-${foodIndex}" value="${food.quantity}">
                 <button onclick="removeFoodDuringEdit(${index}, ${foodIndex})">Remover</button>
               </div>
-            `
-              )
-              .join("")}
+            `).join("")}
           </div>
           <button onclick="addFoodDuringEdit(${index})">Adicionar Alimento</button>
         </td>
@@ -901,6 +900,7 @@ function editDiet(index) {
 
 function addFoodDuringEdit(index) {
   const foodsDiv = document.getElementById(`edit-foods-${index}`);
+  if (!foodsDiv) return;
   const foodIndex = foodsDiv.children.length;
   const newFood = document.createElement("div");
   newFood.classList.add("food-item");
@@ -914,6 +914,7 @@ function addFoodDuringEdit(index) {
 
 function removeFoodDuringEdit(index, foodIndex) {
   const foodsDiv = document.getElementById(`edit-foods-${index}`);
+  if (!foodsDiv) return;
   if (foodsDiv.children.length > 1) {
     foodsDiv.removeChild(foodsDiv.children[foodIndex]);
   } else {
@@ -923,49 +924,44 @@ function removeFoodDuringEdit(index, foodIndex) {
 
 function saveDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  const day = document.getElementById(`edit-diet-day-${index}`).value;
-  const meal = document.getElementById(`edit-diet-meal-${index}`).value;
-  const foods = Array.from(
-    document.querySelectorAll(`#edit-foods-${index} .food-item`)
-  )
+  const day = document.getElementById(`edit-diet-day-${index}`)?.value;
+  const meal = document.getElementById(`edit-diet-meal-${index}`)?.value;
+  const foods = Array.from(document.querySelectorAll(`#edit-foods-${index} .food-item`))
     .map((entry, foodIndex) => {
-      const name = entry.querySelector(
-        `input[name="edit-food-name-${index}-${foodIndex}"]`
-      ).value;
-      const quantity = entry.querySelector(
-        `input[name="edit-food-quantity-${index}-${foodIndex}"]`
-      ).value;
+      const name = entry.querySelector(`input[name="edit-food-name-${index}-${foodIndex}"]`)?.value;
+      const quantity = entry.querySelector(`input[name="edit-food-quantity-${index}-${foodIndex}"]`)?.value;
       return { name, quantity };
     })
-    .filter((food) => food.name.trim() !== "" && food.quantity.trim() !== "");
+    .filter((food) => food.name?.trim() && food.quantity?.trim());
 
-  if (foods.length === 0) {
-    alert("Adicione pelo menos um alimento válido.");
+  if (!day || !meal || foods.length === 0) {
+    alert("Preencha o dia, a refeição e adicione pelo menos um alimento.");
     return;
   }
 
   fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      return response.json();
+    })
     .then((diets) => {
-      const existingDietIndex = diets.findIndex(
-        (d, i) => d.day === day && d.meal === meal && i !== index
-      );
+      const existingDietIndex = diets.findIndex((d, i) => d.day === day && d.meal === meal && i !== index);
       if (existingDietIndex !== -1) {
-        alert(
-          "Já existe uma dieta para este dia e refeição. Escolha outra combinação ou exclua a dieta existente."
-        );
+        alert("Já existe uma dieta para este dia e refeição. Escolha outra combinação ou exclua a dieta existente.");
         return;
       }
 
       diets[index] = { day, meal, foods };
-      fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+      return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(diets),
-      }).then(() => location.reload());
+      });
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao salvar dieta:", error);
+      alert("Erro ao salvar dieta. Verifique o console.");
     });
 }
 
@@ -976,15 +972,19 @@ function cancelDietEdit(index) {
 function deleteDiet(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      return response.json();
+    })
     .then((diets) => {
       diets.splice(index, 1);
-      fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+      return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(diets),
-      }).then(() => location.reload());
+      });
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao excluir dieta:", error);
     });
@@ -993,19 +993,23 @@ function deleteDiet(index) {
 function addFoodToDiet(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      return response.json();
+    })
     .then((diets) => {
       const name = prompt("Digite o nome do alimento (ex.: Frango Grelhado):");
       const quantity = prompt("Digite a quantidade (ex.: 100g):");
-      if (name && name.trim() !== "" && quantity && quantity.trim() !== "") {
+      if (name?.trim() && quantity?.trim()) {
         diets[index].foods.push({ name, quantity });
-        fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(diets),
-        }).then(() => location.reload());
+        });
       }
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao adicionar alimento:", error);
     });
@@ -1014,21 +1018,23 @@ function addFoodToDiet(index) {
 function removeFood(dietIndex, foodIndex) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      return response.json();
+    })
     .then((diets) => {
       if (diets[dietIndex].foods.length > 1) {
         diets[dietIndex].foods.splice(foodIndex, 1);
-        fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(diets),
-        }).then(() => location.reload());
+        });
       } else {
-        alert(
-          'Você deve ter pelo menos um alimento. Para remover a dieta inteira, use o botão "Excluir".'
-        );
+        alert('Você deve ter pelo menos um alimento. Para remover a dieta inteira, use o botão "Excluir".');
       }
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao remover alimento:", error);
     });
@@ -1038,15 +1044,19 @@ function removeFood(dietIndex, foodIndex) {
 function deleteWeight(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar pesos");
+      return response.json();
+    })
     .then((weights) => {
       weights.splice(index, 1);
-      fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+      return fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(weights),
-      }).then(() => location.reload());
+      });
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao excluir peso:", error);
     });
@@ -1056,53 +1066,37 @@ function deleteWeight(index) {
 function editWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      return response.json();
+    })
     .then((workouts) => {
       const workout = workouts[index];
-      const row = document.getElementById("workouts-body").children[index];
+      const row = document.getElementById("workouts-body")?.children[index];
+      if (!row) return;
       row.innerHTML = `
         <td>
           <select id="edit-day-${index}">
-            <option value="Segunda" ${
-              workout.day === "Segunda" ? "selected" : ""
-            }>Segunda</option>
-            <option value="Terça" ${
-              workout.day === "Terça" ? "selected" : ""
-            }>Terça</option>
-            <option value="Quarta" ${
-              workout.day === "Quarta" ? "selected" : ""
-            }>Quarta</option>
-            <option value="Quinta" ${
-              workout.day === "Quinta" ? "selected" : ""
-            }>Quinta</option>
-            <option value="Sexta" ${
-              workout.day === "Sexta" ? "selected" : ""
-            }>Sexta</option>
-            <option value="Sábado" ${
-              workout.day === "Sábado" ? "selected" : ""
-            }>Sábado</option>
-            <option value="Domingo" ${
-              workout.day === "Domingo" ? "selected" : ""
-            }>Domingo</option>
+            <option value="Segunda" ${workout.day === "Segunda" ? "selected" : ""}>Segunda</option>
+            <option value="Terça" ${workout.day === "Terça" ? "selected" : ""}>Terça</option>
+            <option value="Quarta" ${workout.day === "Quarta" ? "selected" : ""}>Quarta</option>
+            <option value="Quinta" ${workout.day === "Quinta" ? "selected" : ""}>Quinta</option>
+            <option value="Sexta" ${workout.day === "Sexta" ? "selected" : ""}>Sexta</option>
+            <option value="Sábado" ${workout.day === "Sábado" ? "selected" : ""}>Sábado</option>
+            <option value="Domingo" ${workout.day === "Domingo" ? "selected" : ""}>Domingo</option>
           </select>
         </td>
-        <td><input type="text" id="edit-title-${index}" value="${
-          workout.title
-        }"></td>
+        <td><input type="text" id="edit-title-${index}" value="${workout.title}"></td>
         <td>
           <div id="edit-exercises-${index}">
-            ${workout.exercises
-              .map(
-                (exercise, exIndex) => `
+            ${workout.exercises.map((exercise, exIndex) => `
               <div class="exercise-item">
                 <input type="text" name="edit-exercise-name-${index}-${exIndex}" value="${exercise.name}">
                 <input type="number" name="edit-exercise-sets-${index}-${exIndex}" value="${exercise.sets}" min="1">
                 <input type="number" name="edit-exercise-reps-${index}-${exIndex}" value="${exercise.reps}" min="1">
                 <button onclick="removeExerciseDuringEdit(${index}, ${exIndex})">Remover</button>
               </div>
-            `
-              )
-              .join("")}
+            `).join("")}
           </div>
           <button onclick="addExerciseDuringEdit(${index})">Adicionar Exercício</button>
         </td>
@@ -1119,6 +1113,7 @@ function editWorkout(index) {
 
 function addExerciseDuringEdit(index) {
   const exercisesDiv = document.getElementById(`edit-exercises-${index}`);
+  if (!exercisesDiv) return;
   const exIndex = exercisesDiv.children.length;
   const newExercise = document.createElement("div");
   newExercise.classList.add("exercise-item");
@@ -1133,6 +1128,7 @@ function addExerciseDuringEdit(index) {
 
 function removeExerciseDuringEdit(index, exIndex) {
   const exercisesDiv = document.getElementById(`edit-exercises-${index}`);
+  if (!exercisesDiv) return;
   if (exercisesDiv.children.length > 1) {
     exercisesDiv.removeChild(exercisesDiv.children[exIndex]);
   } else {
@@ -1142,55 +1138,45 @@ function removeExerciseDuringEdit(index, exIndex) {
 
 function saveWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
-  const day = document.getElementById(`edit-day-${index}`).value;
-  const title = document.getElementById(`edit-title-${index}`).value;
-  const exercises = Array.from(
-    document.querySelectorAll(`#edit-exercises-${index} .exercise-item`)
-  )
+  const day = document.getElementById(`edit-day-${index}`)?.value;
+  const title = document.getElementById(`edit-title-${index}`)?.value;
+  const exercises = Array.from(document.querySelectorAll(`#edit-exercises-${index} .exercise-item`))
     .map((entry, exIndex) => {
-      const name = entry.querySelector(
-        `input[name="edit-exercise-name-${index}-${exIndex}"]`
-      ).value;
-      const sets = entry.querySelector(
-        `input[name="edit-exercise-sets-${index}-${exIndex}"]`
-      ).value;
-      const reps = entry.querySelector(
-        `input[name="edit-exercise-reps-${index}-${exIndex}"]`
-      ).value;
+      const name = entry.querySelector(`input[name="edit-exercise-name-${index}-${exIndex}"]`)?.value;
+      const sets = entry.querySelector(`input[name="edit-exercise-sets-${index}-${exIndex}"]`)?.value;
+      const reps = entry.querySelector(`input[name="edit-exercise-reps-${index}-${exIndex}"]`)?.value;
       return { name, sets, reps };
     })
-    .filter(
-      (exercise) =>
-        exercise.name.trim() !== "" && exercise.sets && exercise.reps
-    );
+    .filter((exercise) => exercise.name?.trim() && exercise.sets && exercise.reps);
 
-  if (exercises.length === 0) {
-    alert("Adicione pelo menos um exercício válido.");
+  if (!day || !title || exercises.length === 0) {
+    alert("Preencha o dia, título e adicione pelo menos um exercício.");
     return;
   }
 
   fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      return response.json();
+    })
     .then((workouts) => {
-      const existingDayIndex = workouts.findIndex(
-        (w, i) => w.day === day && i !== index
-      );
+      const existingDayIndex = workouts.findIndex((w, i) => w.day === day && i !== index);
       if (existingDayIndex !== -1) {
-        alert(
-          "Já existe um treino para este dia. Escolha outro dia ou exclua o treino existente."
-        );
+        alert("Já existe um treino para este dia. Escolha outro dia ou exclua o treino existente.");
         return;
       }
 
       workouts[index] = { day, title, exercises };
-      fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+      return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workouts),
-      }).then(() => location.reload());
+      });
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao salvar treino:", error);
+      alert("Erro ao salvar treino. Verifique o console.");
     });
 }
 
@@ -1201,15 +1187,19 @@ function cancelEdit(index) {
 function deleteWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      return response.json();
+    })
     .then((workouts) => {
       workouts.splice(index, 1);
-      fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+      return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workouts),
-      }).then(() => location.reload());
+      });
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao excluir treino:", error);
     });
@@ -1218,20 +1208,24 @@ function deleteWorkout(index) {
 function addExerciseToDay(index) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      return response.json();
+    })
     .then((workouts) => {
       const name = prompt("Digite o nome do exercício (ex.: Supino Reto):");
       const sets = prompt("Digite o número de séries (ex.: 4):");
       const reps = prompt("Digite o número de repetições (ex.: 10):");
-      if (name && name.trim() !== "" && sets && reps) {
+      if (name?.trim() && sets && reps) {
         workouts[index].exercises.push({ name, sets, reps });
-        fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
-        }).then(() => location.reload());
+        });
       }
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao adicionar exercício:", error);
     });
@@ -1240,21 +1234,23 @@ function addExerciseToDay(index) {
 function removeExercise(dayIndex, exIndex) {
   const email = localStorage.getItem("loggedInUser");
   fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      return response.json();
+    })
     .then((workouts) => {
       if (workouts[dayIndex].exercises.length > 1) {
         workouts[dayIndex].exercises.splice(exIndex, 1);
-        fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
-        }).then(() => location.reload());
+        });
       } else {
-        alert(
-          'Você deve ter pelo menos um exercício. Para remover o dia inteiro, use o botão "Excluir".'
-        );
+        alert('Você deve ter pelo menos um exercício. Para remover o dia inteiro, use o botão "Excluir".');
       }
     })
+    .then(() => location.reload())
     .catch((error) => {
       console.error("Erro ao remover exercício:", error);
     });

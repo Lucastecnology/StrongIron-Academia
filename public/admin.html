@@ -31,7 +31,7 @@
   <main class="main-content">
     <section class="admin-section">
       <h2>Painel de Administração</h2>
-      <p>Gerencie os usuários do sistema.</p>
+      <p>Gerencie os usuários e matrículas do sistema.</p>
       <div class="users-table">
         <h3>Lista de Usuários</h3>
         <table id="users-table">
@@ -48,6 +48,29 @@
         </table>
         <div id="no-users-message" style="display: none; color: red; margin-top: 10px;">
           Nenhum usuário encontrado.
+        </div>
+      </div>
+      <div class="enrollments-table">
+        <h3>Lista de Matrículas</h3>
+        <table id="enrollments-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Número do Cartão</th>
+              <th>Validade</th>
+              <th>CVC</th>
+              <th>Plano</th>
+              <th>Data de Registro</th>
+            </tr>
+          </thead>
+          <tbody id="enrollments-body">
+            <!-- Matrículas serão adicionadas aqui dinamicamente -->
+          </tbody>
+        </table>
+        <div id="no-enrollments-message" style="display: none; color: red; margin-top: 10px;">
+          Nenhuma matrícula encontrada.
         </div>
       </div>
     </section>
@@ -82,5 +105,110 @@
   </footer>
 
   <script src="scripts.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const usersTableBody = document.getElementById("users-table-body");
+      const noUsersMessage = document.getElementById("no-users-message");
+      const enrollmentsBody = document.getElementById("enrollments-body");
+      const noEnrollmentsMessage = document.getElementById("no-enrollments-message");
+      const email = localStorage.getItem("loggedInUser");
+
+      if (!email || email !== "admin@admin.com") {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Carregar e exibir usuários
+      fetch("http://localhost:3800/admin-data")
+        .then((response) => {
+          if (!response.ok) throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
+          return response.json();
+        })
+        .then((users) => {
+          if (users.length === 0) {
+            noUsersMessage.style.display = "block";
+          } else {
+            noUsersMessage.style.display = "none";
+            users.forEach((user) => {
+              const row = document.createElement("tr");
+              const workoutsList = user.workouts
+                .map(
+                  (w) => `
+                    ${w.day} (${w.title}):<br>
+                    ${w.exercises
+                      .map((ex) => `- ${ex.name}: ${ex.sets} séries de ${ex.reps} repetições`)
+                      .join("<br>")}
+                  `
+                )
+                .join("<br><br>");
+              row.innerHTML = `
+                <td>${user.email}</td>
+                <td>${user.password}</td>
+                <td>${workoutsList || "Nenhum treino"}</td>
+              `;
+              usersTableBody.appendChild(row);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar dados dos usuários:", error);
+          noUsersMessage.innerText = "Erro ao carregar os dados dos usuários. Verifique o console para mais detalhes.";
+          noUsersMessage.style.display = "block";
+        });
+
+      // Carregar e exibir matrículas
+      fetch("http://localhost:3800/enrollments")
+        .then((response) => {
+          if (!response.ok) throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
+          return response.json();
+        })
+        .then((enrollments) => {
+          if (enrollments.length === 0) {
+            noEnrollmentsMessage.style.display = "block";
+          } else {
+            noEnrollmentsMessage.style.display = "none";
+            enrollments.forEach((enrollment) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${enrollment.name}</td>
+                <td>${enrollment.email}</td>
+                <td>${enrollment.phone}</td>
+                <td>${censorCardNumber(enrollment.cardNumber)}</td>
+                <td>${censorExpiry(enrollment.cardExpiry)}</td>
+                <td>${censorCvc(enrollment.cardCvc)}</td>
+                <td>${enrollment.plan}</td>
+                <td>${new Date(enrollment.registrationDate).toLocaleString("pt-BR")}</td>
+              `;
+              enrollmentsBody.appendChild(row);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar matrículas:", error);
+          noEnrollmentsMessage.innerText = "Erro ao carregar as matrículas. Verifique o console para mais detalhes.";
+          noEnrollmentsMessage.style.display = "block";
+        });
+
+      // Função para censurar o número do cartão (mostra apenas os últimos 4 dígitos)
+      function censorCardNumber(cardNumber) {
+        if (!cardNumber) return "N/A";
+        const lastFour = cardNumber.slice(-4).padStart(cardNumber.length, "*");
+        return lastFour.replace(/(\d{4})/g, "$1 ").trim();
+      }
+
+      // Função para censurar a data de validade (mostra apenas o último dígito do ano)
+      function censorExpiry(expiry) {
+        if (!expiry) return "N/A";
+        const [month, year] = expiry.split("/");
+        return `${month}/X${year.slice(-1)}`;
+      }
+
+      // Função para censurar o CVC (mostra apenas o último dígito)
+      function censorCvc(cvc) {
+        if (!cvc) return "N/A";
+        return "*".repeat(cvc.length - 1) + cvc.slice(-1);
+      }
+    });
+  </script>
 </body>
 </html>

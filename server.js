@@ -9,21 +9,43 @@ const port = 3800;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Função para inicializar arquivos JSON se não existirem ou estiverem corrompidos
+async function initializeFile(filePath, defaultValue) {
+  try {
+    await fs.access(filePath);
+    const data = await fs.readFile(filePath, 'utf8');
+    JSON.parse(data); // Testa se o arquivo é um JSON válido
+  } catch (error) {
+    console.log(`Inicializando arquivo ${filePath} com valor padrão:`, defaultValue);
+    await fs.writeFile(filePath, JSON.stringify(defaultValue, null, 2), 'utf8');
+  }
+}
 
 // Função para ler dados de um arquivo
 async function readData(file) {
   try {
     const data = await fs.readFile(file, 'utf8');
     if (!data.trim()) {
+      // Para users.json e enrollments.json, retornar [] se o arquivo estiver vazio
+      if (file === usersFile || file === enrollmentsFile) {
+        return [];
+      }
       return {};
     }
     return JSON.parse(data);
   } catch (error) {
     if (error.code === 'ENOENT') {
+      if (file === usersFile || file === enrollmentsFile) {
+        return [];
+      }
       return {};
     } else if (error instanceof SyntaxError) {
       console.error(`Erro de parsing JSON no arquivo ${file}: ${error.message}`);
+      if (file === usersFile || file === enrollmentsFile) {
+        return [];
+      }
       return {};
     }
     throw error;
@@ -32,20 +54,27 @@ async function readData(file) {
 
 // Função para escrever dados em um arquivo
 async function writeData(file, data) {
-  await fs.writeFile(file, JSON.stringify(data, null, 2));
+  try {
+    await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
+  } catch (error) {
+    console.error(`Erro ao escrever no arquivo ${file}:`, error);
+    throw error;
+  }
 }
 
-// Arquivo para armazenar usuários
+// Arquivos para armazenar dados
 const usersFile = path.join(__dirname, 'users.json');
-
-// Arquivo para armazenar dietas
 const dietsFile = path.join(__dirname, 'diets.json');
-
-// Arquivo para armazenar pesos
 const weightsFile = path.join(__dirname, 'weights.json');
-
-// Arquivo para armazenar matrículas
 const enrollmentsFile = path.join(__dirname, 'enrollments.json');
+
+// Inicializar arquivos JSON ao iniciar o servidor
+(async () => {
+  await initializeFile(usersFile, []);
+  await initializeFile(enrollmentsFile, []);
+  await initializeFile(dietsFile, {});
+  await initializeFile(weightsFile, {});
+})();
 
 // Rota para login
 app.post('/login', async (req, res) => {
@@ -89,20 +118,35 @@ app.post('/signup', async (req, res) => {
 
 // Rota para salvar matrículas
 app.post('/enrollments', async (req, res) => {
-  const { name, email, cardNumber, cardExpiry, cardCvc } = req.body;
+  const { name, email, phone, cardNumber, cardExpiry, cardCvc, plan, registrationDate } = req.body;
   try {
     console.log(`Salvando matrícula para o email: ${email}`);
     const enrollments = await readData(enrollmentsFile);
-    if (enrollments[email]) {
+    // Verifica se já existe uma matrícula para o mesmo email
+    if (enrollments.find(e => e.email === email)) {
       console.log(`Email já matriculado: ${email}`);
       return res.status(400).json({ success: false, message: 'Email já matriculado.' });
     }
-    enrollments[email] = { name, email, cardNumber: cardNumber.slice(-4), cardExpiry, cardCvc, enrolledAt: new Date().toISOString() };
+    // Adiciona a nova matrícula
+    enrollments.push({ name, email, phone, cardNumber, cardExpiry, cardCvc, plan, registrationDate });
     await writeData(enrollmentsFile, enrollments);
     console.log(`Matrícula salva com sucesso para o email: ${email}`);
     res.json({ success: true });
   } catch (error) {
     console.error('Erro ao salvar matrícula:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor.' });
+  }
+});
+
+// Rota para obter todas as matrículas
+app.get('/enrollments', async (req, res) => {
+  try {
+    console.log('Obtendo todas as matrículas');
+    const enrollments = await readData(enrollmentsFile);
+    console.log('Matrículas enviadas:', enrollments);
+    res.json(enrollments);
+  } catch (error) {
+    console.error('Erro ao obter matrículas:', error);
     res.status(500).json({ success: false, message: 'Erro no servidor.' });
   }
 });
@@ -209,7 +253,7 @@ app.post('/weights/:email', async (req, res) => {
     console.log(`Pesos salvos com sucesso para o email: ${email}`);
     res.json({ success: true });
   } catch (error) {
-    console.error(`Erro ao salvar pesos: ${error}`);
+    console.error('Erro ao salvar pesos:', error);
     res.status(500).json({ success: false, message: 'Erro no servidor.' });
   }
 });
@@ -230,7 +274,10 @@ app.get('/admin-data', async (req, res) => {
 // Rota para servir o frontend (deve ser a última rota)
 app.get('*', (req, res) => {
   console.log(`Servindo página frontend para a rota: ${req.url}`);
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  const filePath = path.join(__dirname, 'public', req.url === '/' ? 'index.html' : req.url);
+  fs.access(filePath, fs.constants.F_OK)
+    .then(() => res.sendFile(filePath))
+    .catch(() => res.sendFile(path.join(__dirname, 'public', '404.html')));
 });
 
 // Iniciar o servidor

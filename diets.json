@@ -1,3 +1,18 @@
 {
-  "admin@admin.com": []
+  "admin@admin.com": [
+    {
+      "day": "Terça",
+      "meal": "Café da Manhã",
+      "foods": [
+        {
+          "name": "asf",
+          "quantity": "233"
+        },
+        {
+          "name": "asas",
+          "quantity": "244"
+        }
+      ]
+    }
+  ]
 }
