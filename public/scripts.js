@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("https://strongiron.netlify.app/login", {
+        const response = await fetch("/.netlify/functions/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("https://strongiron.netlify.app/signup", {
+        const response = await fetch("/.netlify/functions/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, phone, password }),
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        const response = await fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         diets.push({ day, meal, foods });
-        const saveResponse = await fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        const saveResponse = await fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(diets),
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+    fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+        const response = await fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -321,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         weights.push({ date, weight });
         weights.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const saveResponse = await fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+        const saveResponse = await fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(weights),
@@ -349,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+    fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -511,7 +511,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`);
+        const response = await fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`);
         if (!response.ok) throw new Error("Erro ao carregar treinos");
         const workouts = await response.json() || [];
 
@@ -522,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         workouts.push({ day, title, exercises });
-        const saveResponse = await fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        const saveResponse = await fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
@@ -544,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+    fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
       .then((response) => {
         if (!response.ok) throw new Error("Erro ao carregar treinos");
         return response.json();
@@ -591,7 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch("http://localhost:3800/admin-data")
+    fetch("/.netlify/functions/admin-data")
       .then((response) => {
         if (!response.ok) throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
         return response.text();
@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch("http://localhost:3800/enrollments")
+    fetch("/.netlify/functions/enrollments")
       .then((response) => {
         if (!response.ok) {
           console.error("Erro HTTP na requisição de matrículas:", response.status, response.statusText);
@@ -754,7 +754,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         console.log("Enviando dados para o servidor:", enrollmentData);
-        const response = await fetch("http://localhost:3800/enrollments", {
+        const response = await fetch("/.netlify/functions/enrollments", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(enrollmentData),
@@ -844,7 +844,7 @@ function censorCvc(cvc) {
 // Funções para dietas
 function editDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar dietas");
       return response.json();
@@ -939,7 +939,7 @@ function saveDiet(index) {
     return;
   }
 
-  fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar dietas");
       return response.json();
@@ -952,7 +952,7 @@ function saveDiet(index) {
       }
 
       diets[index] = { day, meal, foods };
-      return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+      return fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(diets),
@@ -971,14 +971,14 @@ function cancelDietEdit(index) {
 
 function deleteDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar dietas");
       return response.json();
     })
     .then((diets) => {
       diets.splice(index, 1);
-      return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+      return fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(diets),
@@ -992,7 +992,7 @@ function deleteDiet(index) {
 
 function addFoodToDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar dietas");
       return response.json();
@@ -1002,7 +1002,7 @@ function addFoodToDiet(index) {
       const quantity = prompt("Digite a quantidade (ex.: 100g):");
       if (name?.trim() && quantity?.trim()) {
         diets[index].foods.push({ name, quantity });
-        return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        return fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(diets),
@@ -1017,7 +1017,7 @@ function addFoodToDiet(index) {
 
 function removeFood(dietIndex, foodIndex) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar dietas");
       return response.json();
@@ -1025,7 +1025,7 @@ function removeFood(dietIndex, foodIndex) {
     .then((diets) => {
       if (diets[dietIndex].foods.length > 1) {
         diets[dietIndex].foods.splice(foodIndex, 1);
-        return fetch(`http://localhost:3800/diets/${encodeURIComponent(email)}`, {
+        return fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(diets),
@@ -1043,14 +1043,14 @@ function removeFood(dietIndex, foodIndex) {
 // Função para excluir peso
 function deleteWeight(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar pesos");
       return response.json();
     })
     .then((weights) => {
       weights.splice(index, 1);
-      return fetch(`http://localhost:3800/weights/${encodeURIComponent(email)}`, {
+      return fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(weights),
@@ -1065,7 +1065,7 @@ function deleteWeight(index) {
 // Funções para treinos
 function editWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar treinos");
       return response.json();
@@ -1154,7 +1154,7 @@ function saveWorkout(index) {
     return;
   }
 
-  fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar treinos");
       return response.json();
@@ -1167,7 +1167,7 @@ function saveWorkout(index) {
       }
 
       workouts[index] = { day, title, exercises };
-      return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+      return fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workouts),
@@ -1186,14 +1186,14 @@ function cancelEdit(index) {
 
 function deleteWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar treinos");
       return response.json();
     })
     .then((workouts) => {
       workouts.splice(index, 1);
-      return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+      return fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workouts),
@@ -1207,7 +1207,7 @@ function deleteWorkout(index) {
 
 function addExerciseToDay(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar treinos");
       return response.json();
@@ -1218,7 +1218,7 @@ function addExerciseToDay(index) {
       const reps = prompt("Digite o número de repetições (ex.: 10):");
       if (name?.trim() && sets && reps) {
         workouts[index].exercises.push({ name, sets, reps });
-        return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        return fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
@@ -1233,7 +1233,7 @@ function addExerciseToDay(index) {
 
 function removeExercise(dayIndex, exIndex) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao carregar treinos");
       return response.json();
@@ -1241,7 +1241,7 @@ function removeExercise(dayIndex, exIndex) {
     .then((workouts) => {
       if (workouts[dayIndex].exercises.length > 1) {
         workouts[dayIndex].exercises.splice(exIndex, 1);
-        return fetch(`http://localhost:3800/workouts/${encodeURIComponent(email)}`, {
+        return fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
