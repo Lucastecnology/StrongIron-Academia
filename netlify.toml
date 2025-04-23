@@ -1,0 +1,4 @@
+# netlify.toml
+[build]
+  functions = "functions"  # Diretório onde estão as Netlify Functions
+  publish = "public"       # Diretório dos arquivos estáticos

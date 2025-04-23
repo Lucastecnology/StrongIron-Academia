@@ -76,6 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ email, password }),
         });
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro HTTP: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
         const result = await response.json();
         if (result.success) {
           localStorage.setItem("loggedInUser", email);
@@ -111,6 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, phone, password }),
         });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro HTTP: ${response.status} ${response.statusText} - ${errorText}`);
+        }
 
         const result = await response.json();
         if (result.success) {
@@ -204,7 +214,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!response.ok) {
-          throw new Error("Erro ao carregar dietas: " + response.statusText);
+          const errorText = await response.text();
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${errorText}`);
         }
 
         const diets = await response.json() || [];
@@ -222,7 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!saveResponse.ok) {
-          throw new Error("Erro ao salvar dieta: " + saveResponse.statusText);
+          const errorText = await saveResponse.text();
+          throw new Error(`Erro ao salvar dieta: ${saveResponse.status} ${saveResponse.statusText} - ${errorText}`);
         }
 
         location.reload();
@@ -248,7 +260,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Erro ao carregar dietas: " + response.statusText);
+          return response.text().then((text) => {
+            throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+          });
         }
         return response.json();
       })
@@ -313,7 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!response.ok) {
-          throw new Error("Erro ao carregar pesos: " + response.statusText);
+          const errorText = await response.text();
+          throw new Error(`Erro ao carregar pesos: ${response.status} ${response.statusText} - ${errorText}`);
         }
 
         const weights = await response.json() || [];
@@ -328,7 +343,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!saveResponse.ok) {
-          throw new Error("Erro ao salvar pesos: " + saveResponse.statusText);
+          const errorText = await saveResponse.text();
+          throw new Error(`Erro ao salvar pesos: ${saveResponse.status} ${saveResponse.statusText} - ${errorText}`);
         }
 
         location.reload();
@@ -355,7 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Erro ao carregar pesos: " + response.statusText);
+          return response.text().then((text) => {
+            throw new Error(`Erro ao carregar pesos: ${response.status} ${response.statusText} - ${text}`);
+          });
         }
         return response.json();
       })
@@ -511,8 +529,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`);
-        if (!response.ok) throw new Error("Erro ao carregar treinos");
+        const response = await fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
         const workouts = await response.json() || [];
 
         const existingDayIndex = workouts.findIndex((w) => w.day === day);
@@ -527,7 +553,12 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(workouts),
         });
-        if (!saveResponse.ok) throw new Error("Erro ao salvar treino");
+
+        if (!saveResponse.ok) {
+          const errorText = await saveResponse.text();
+          throw new Error(`Erro ao salvar treino: ${saveResponse.status} ${saveResponse.statusText} - ${errorText}`);
+        }
+
         location.reload();
       } catch (error) {
         console.error("Erro ao adicionar treino:", error);
@@ -544,9 +575,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+    fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
       .then((response) => {
-        if (!response.ok) throw new Error("Erro ao carregar treinos");
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+          });
+        }
         return response.json();
       })
       .then((workouts) => {
@@ -591,20 +629,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch("/.netlify/functions/admin-data")
+    fetch("/.netlify/functions/admin-data", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
       .then((response) => {
-        if (!response.ok) throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
-        return response.text();
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(`Erro na requisição: ${response.status} ${response.statusText} - ${text}`);
+          });
+        }
+        return response.json();
       })
-      .then((text) => {
-        console.log("Resposta bruta do servidor (admin-data):", text);
-        let users;
-        try {
-          users = JSON.parse(text);
-          if (!Array.isArray(users)) throw new Error("A resposta não é um array de usuários.");
-        } catch (parseError) {
-          console.error("Erro ao parsear JSON (admin-data):", parseError);
-          throw new Error("A resposta do servidor não é um JSON válido.");
+      .then((users) => {
+        if (!Array.isArray(users)) {
+          throw new Error("A resposta não é um array de usuários.");
         }
 
         const noUsersMessage = document.getElementById("no-users-message");
@@ -614,7 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
           noUsersMessage.style.display = "none";
           users.forEach((user) => {
             const row = document.createElement("tr");
-            const workoutsList = user.workouts
+            const workoutsList = (user.workouts || [])
               .map((w) => `
                 ${w.day} (${w.title}):<br>
                 ${w.exercises
@@ -648,25 +687,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    fetch("/.netlify/functions/enrollments")
+    fetch("/.netlify/functions/enrollments", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
       .then((response) => {
         if (!response.ok) {
-          console.error("Erro HTTP na requisição de matrículas:", response.status, response.statusText);
-          return response.text().then((text) => Promise.reject(new Error(`Status: ${response.status}, Corpo: ${text}`)));
+          return response.text().then((text) => {
+            throw new Error(`Erro na requisição de matrículas: ${response.status} ${response.statusText} - ${text}`);
+          });
         }
-        return response.text();
+        return response.json();
       })
-      .then((text) => {
-        console.log("Resposta bruta do servidor (enrollments):", text);
-        let enrollments;
-        try {
-          enrollments = JSON.parse(text);
-          if (!Array.isArray(enrollments)) {
-            throw new Error("A resposta não é um array de matrículas.");
-          }
-        } catch (parseError) {
-          console.error("Erro ao parsear JSON (enrollments):", parseError, "Texto recebido:", text);
-          enrollments = [];
+      .then((enrollments) => {
+        if (!Array.isArray(enrollments)) {
+          throw new Error("A resposta não é um array de matrículas.");
         }
 
         const noEnrollmentsMessage = document.getElementById("no-enrollments-message");
@@ -760,6 +795,11 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify(enrollmentData),
         });
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ao realizar matrícula: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
         const result = await response.json();
         console.log("Resposta do servidor:", result);
 
@@ -823,13 +863,11 @@ function censorCardNumber(cardNumber) {
 
 function censorExpiry(expiry) {
   if (!expiry || typeof expiry !== "string") return "N/A";
-  // Verifica se o formato é MMAA (ex.: "5902")
   if (expiry.length === 4 && /^\d{4}$/.test(expiry)) {
     const month = expiry.slice(0, 2);
     const year = expiry.slice(2, 4);
-    return `${month}/*${year.slice(-1)}`; // Censura o penúltimo dígito do ano
+    return `${month}/*${year.slice(-1)}`;
   }
-  // Caso o formato seja MM/YYYY (ex.: "05/2002")
   const parts = expiry.split("/");
   if (parts.length !== 2 || !parts[0] || !parts[1]) return "N/A";
   const [month, year] = parts;
@@ -844,9 +882,16 @@ function censorCvc(cvc) {
 // Funções para dietas
 function editDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((diets) => {
@@ -895,6 +940,7 @@ function editDiet(index) {
     })
     .catch((error) => {
       console.error("Erro ao editar dieta:", error);
+      alert("Erro ao editar dieta. Verifique o console.");
     });
 }
 
@@ -939,9 +985,16 @@ function saveDiet(index) {
     return;
   }
 
-  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((diets) => {
@@ -958,7 +1011,14 @@ function saveDiet(index) {
         body: JSON.stringify(diets),
       });
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao salvar dieta: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao salvar dieta:", error);
       alert("Erro ao salvar dieta. Verifique o console.");
@@ -971,9 +1031,16 @@ function cancelDietEdit(index) {
 
 function deleteDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((diets) => {
@@ -984,17 +1051,32 @@ function deleteDiet(index) {
         body: JSON.stringify(diets),
       });
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao excluir dieta: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao excluir dieta:", error);
+      alert("Erro ao excluir dieta. Verifique o console.");
     });
 }
 
 function addFoodToDiet(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((diets) => {
@@ -1009,17 +1091,32 @@ function addFoodToDiet(index) {
         });
       }
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao adicionar alimento: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao adicionar alimento:", error);
+      alert("Erro ao adicionar alimento. Verifique o console.");
     });
 }
 
 function removeFood(dietIndex, foodIndex) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/diets?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar dietas");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar dietas: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((diets) => {
@@ -1034,18 +1131,33 @@ function removeFood(dietIndex, foodIndex) {
         alert('Você deve ter pelo menos um alimento. Para remover a dieta inteira, use o botão "Excluir".');
       }
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao remover alimento: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao remover alimento:", error);
+      alert("Erro ao remover alimento. Verifique o console.");
     });
 }
 
 // Função para excluir peso
 function deleteWeight(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/weights?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar pesos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar pesos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((weights) => {
@@ -1056,18 +1168,33 @@ function deleteWeight(index) {
         body: JSON.stringify(weights),
       });
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao excluir peso: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao excluir peso:", error);
+      alert("Erro ao excluir peso. Verifique o console.");
     });
 }
 
 // Funções para treinos
 function editWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((workouts) => {
@@ -1108,6 +1235,7 @@ function editWorkout(index) {
     })
     .catch((error) => {
       console.error("Erro ao editar treino:", error);
+      alert("Erro ao editar treino. Verifique o console.");
     });
 }
 
@@ -1154,9 +1282,16 @@ function saveWorkout(index) {
     return;
   }
 
-  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((workouts) => {
@@ -1173,7 +1308,14 @@ function saveWorkout(index) {
         body: JSON.stringify(workouts),
       });
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao salvar treino: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao salvar treino:", error);
       alert("Erro ao salvar treino. Verifique o console.");
@@ -1186,9 +1328,16 @@ function cancelEdit(index) {
 
 function deleteWorkout(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((workouts) => {
@@ -1199,17 +1348,32 @@ function deleteWorkout(index) {
         body: JSON.stringify(workouts),
       });
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao excluir treino: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao excluir treino:", error);
+      alert("Erro ao excluir treino. Verifique o console.");
     });
 }
 
 function addExerciseToDay(index) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((workouts) => {
@@ -1225,17 +1389,32 @@ function addExerciseToDay(index) {
         });
       }
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao adicionar exercício: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao adicionar exercício:", error);
+      alert("Erro ao adicionar exercício. Verifique o console.");
     });
 }
 
 function removeExercise(dayIndex, exIndex) {
   const email = localStorage.getItem("loggedInUser");
-  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`)
+  fetch(`/.netlify/functions/workouts?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error("Erro ao carregar treinos");
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao carregar treinos: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
       return response.json();
     })
     .then((workouts) => {
@@ -1250,8 +1429,16 @@ function removeExercise(dayIndex, exIndex) {
         alert('Você deve ter pelo menos um exercício. Para remover o dia inteiro, use o botão "Excluir".');
       }
     })
-    .then(() => location.reload())
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Erro ao remover exercício: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+      location.reload();
+    })
     .catch((error) => {
       console.error("Erro ao remover exercício:", error);
+      alert("Erro ao remover exercício. Verifique o console.");
     });
 }
