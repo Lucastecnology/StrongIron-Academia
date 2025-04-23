@@ -23,18 +23,6 @@
     "password": "test",
     "name": "test",
     "phone": "123456789",
-    "workouts": [
-      {
-        "day": "Terça",
-        "title": "asdas",
-        "exercises": [
-          {
-            "name": "asda",
-            "sets": "2",
-            "reps": "2"
-          }
-        ]
-      }
-    ]
+    "workouts": []
   }
 ]
