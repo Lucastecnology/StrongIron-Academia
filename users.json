@@ -1,28 +1,23 @@
 [
   {
-    "email": "admin@admin.com",
-    "password": "admin",
-    "name": "Admin",
-    "phone": "123456789",
-    "workouts": [
-      {
-        "day": "Segunda",
-        "title": "asfas",
-        "exercises": [
-          {
-            "name": "asfas",
-            "sets": "2",
-            "reps": "25"
-          }
-        ]
-      }
-    ]
+    "name": "asas",
+    "email": "2asd@gas.com",
+    "phone": "12512512125125",
+    "password": "2e05a15e4c0f337e89cb3cd64c53e082224865fc7f201dd5c89f4192411ddac7",
+    "workouts": []
   },
   {
-    "email": "test@test.com",
-    "password": "test",
     "name": "test",
-    "phone": "123456789",
+    "email": "test@testt.com",
+    "phone": "125125125",
+    "password": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "workouts": []
+  },
+  {
+    "name": "admin",
+    "email": "admin@admin.com",
+    "phone": "127591752891795",
+    "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
     "workouts": []
   }
 ]
