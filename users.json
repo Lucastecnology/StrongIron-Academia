@@ -19,5 +19,36 @@
     "phone": "127591752891795",
     "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
     "workouts": []
+  },
+  {
+    "name": "test",
+    "email": "test@test.com",
+    "phone": "81985258538",
+    "password": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "workouts": [
+      {
+        "day": "Segunda",
+        "title": "Treino de Peito",
+        "exercises": [
+          {
+            "name": "Supino Reto",
+            "sets": "4",
+            "reps": "10"
+          },
+          {
+            "name": "Elevação Lateral",
+            "sets": "3",
+            "reps": "12"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "João Silva",
+    "email": "joao.silva@test.com",
+    "phone": "11987654321",
+    "password": "55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251",
+    "workouts": []
   }
 ]

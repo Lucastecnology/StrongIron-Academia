@@ -2,15 +2,31 @@
   "admin@admin.com": [
     {
       "day": "Terça",
-      "meal": "Café da Manhã",
+      "meal": "Almoço",
       "foods": [
         {
-          "name": "asf",
-          "quantity": "233"
+          "name": "Arroz",
+          "quantity": "150g"
         },
         {
-          "name": "asas",
-          "quantity": "244"
+          "name": "peito de frango",
+          "quantity": "100g"
+        }
+      ]
+    }
+  ],
+  "test@test.com": [
+    {
+      "day": "Segunda",
+      "meal": "Almoço",
+      "foods": [
+        {
+          "name": "Frango Grelhado",
+          "quantity": "100g"
+        },
+        {
+          "name": "Arroz Integral",
+          "quantity": "50g"
         }
       ]
     }
